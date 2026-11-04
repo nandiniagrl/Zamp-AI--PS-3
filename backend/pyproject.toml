@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q -m 'not integration'"
+markers = ["integration: calls real Groq/Tavily APIs (costs credits; needs keys)"]

@@ -1,0 +1,24 @@
+# secrets
+.env
+.env.*
+!.env.example
+!.env.local.example
+*.pem
+service-account*.json
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+backend/.cache/
+backend/.data/
+backend/out/
+*.sqlite
+*.sqlite3
+# node
+node_modules/
+.next/
+out/
+# os/editor
+.DS_Store
+.idea/

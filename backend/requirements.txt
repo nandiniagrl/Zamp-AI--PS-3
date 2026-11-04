@@ -1,0 +1,14 @@
+python-dotenv>=1.2,<2
+pydantic>=2.14,<3
+pydantic-settings>=2.16,<3
+groq>=1.7,<2
+tavily-python>=0.8.5,<0.9
+langgraph>=1.2,<2
+tenacity>=9.2,<10
+rapidfuzz>=3.14,<4
+# langgraph-checkpoint-sqlite>=3.1,<4         #P10
+# fastapi>=0.162,<1                           #P11
+# uvicorn[standard]>=0.54,<1                  #P11
+# google-cloud-firestore>=2.34,<3             #P13
+# langgraph-checkpoint-postgres>=3.2,<4       #P13
+# psycopg[binary,pool]>=3.3,<4                #P13
