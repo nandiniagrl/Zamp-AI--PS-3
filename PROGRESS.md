@@ -2,13 +2,13 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 1 — Groq connectivity (in progress)
+**Current step:** Phase 2 — Tavily connectivity (in progress)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
 | 0 | Environment & setup | ✅ done | 2026-11-05 | check_setup OK, pytest 10 passed; confirmed by user |
-| 1 | Groq connectivity | 🔨 building | | |
-| 2 | Tavily connectivity | ⬜ | | |
+| 1 | Groq connectivity | ✅ done | 2026-11-05 | both models OK in live list; live text+JSON reply; 24 unit + 1 integration pass |
+| 2 | Tavily connectivity | 🔨 building | | |
 | 3 | Research pipeline | ⬜ | | |
 | 4 | Evidence verification | ⬜ | | |
 | 5 | Signal ranking | ⬜ | | |
@@ -36,7 +36,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - Project folder name contains a space — always quote paths.
 
 ## Accounts & setup status
-- [ ] Groq key in backend/.env (needed for Phase 1)
-- [ ] Tavily key in backend/.env (needed for Phase 2)
+- [x] Groq key in backend/.env
+- [x] Tavily key in backend/.env
 - [ ] Neon project (Phase 13/14)
 - [ ] GCP project + budget alert (Phase 14)
