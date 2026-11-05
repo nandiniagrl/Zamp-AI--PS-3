@@ -51,6 +51,12 @@ class FakeLLM:
         data = handler(user) if handler else self._next(name)
         return schema.model_validate(data), LLMUsage(groq_calls=1)
 
+    def _ClaimExtraction(self, user):
+        """Emit fixture claims for every <source> present in the prompt (keyed by URL)."""
+        by_url = self.fx.get("claims_by_url", {})
+        return {"claims": [{**c, "source_id": sid} for sid, url in self.SOURCE_RE.findall(user)
+                           for c in by_url.get(url, [])]}
+
     def _next(self, name):
         seq = self.fx[name]
         if isinstance(seq, list):

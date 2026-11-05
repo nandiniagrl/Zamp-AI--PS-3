@@ -2,15 +2,15 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 4 — Evidence verification (waiting for your go-ahead)
+**Current step:** Phase 5 — Signal ranking (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
 | 0 | Environment & setup | ✅ done | 2026-11-05 | check_setup OK, pytest 10 passed; confirmed by user |
 | 1 | Groq connectivity | ✅ done | 2026-11-05 | both models OK in live list; live text+JSON reply; 24 unit + 1 integration pass |
 | 2 | Tavily connectivity | ✅ done | 2026-11-05 | live news search 5 results w/ dates, cached repeat 0 credits; 31 unit + 2 integration pass |
-| 3 | Research pipeline | ✅ done (pending your review) | 2026-11-05 | live: 24 deduped records (person 9, company 10, hiring 5), 5 credits; 44 unit tests pass |
-| 4 | Evidence verification | ⬜ | | |
+| 3 | Research pipeline | ✅ done | 2026-11-05 | live: 24 deduped records (person 9, company 10, hiring 5), 5 credits; 44 unit tests pass |
+| 4 | Evidence verification | ✅ done (pending your review) | 2026-11-05 | live: 19 claims → 11 verified / 7 uncertain / 1 rejected, no 429s, ~12k tokens; 65 unit tests |
 | 5 | Signal ranking | ⬜ | | |
 | 6 | Draft generation | ⬜ | | |
 | 7 | Quality checker | ⬜ | | |
@@ -29,9 +29,13 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 ## Decisions log
 - 2026-11-05: Python 3.13.5 + venv/pip; official groq / tavily-python / langgraph SDKs; LangChain not used directly.
 - 2026-11-05: Free tiers only (student): Groq free, Tavily free (1,000 credits/mo), GCP always-free, Neon free Postgres instead of Cloud SQL.
+- 2026-11-05: Claim verification = quote present in source (title+snippet) AND claim grounded in quote AND association AND credibility/corroboration.
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
 
 ## Known issues / limitations
+- Phase 3 live run surfaced low-value sources (instagram, tavily.com directory, job aggregators); Phase 4 credibility rules mark them low.
+- Phase 4: verification is deliberately conservative — claims whose quote lacks a number/key terms become 'uncertain' (e.g. dates missing from quote).
+- Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 is a non-LTS line; switch to Node 24 LTS before Phase 12.
 - Project folder name contains a space — always quote paths.
 
@@ -40,4 +44,3 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - [x] Tavily key in backend/.env
 - [ ] Neon project (Phase 13/14)
 - [ ] GCP project + budget alert (Phase 14)
-- Phase 3 live run surfaced low-value sources (instagram.com, tavily.com knowledge page, job aggregators); Phase 4 credibility rules handle these.
