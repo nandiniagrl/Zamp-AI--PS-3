@@ -1,0 +1,11 @@
+{
+  "name": "Patrick Collison",
+  "company": "Stripe",
+  "title": "CEO",
+  "seller": {
+    "product": "LedgerLens",
+    "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster.",
+    "target_audience": "Finance and RevOps leaders at high-growth fintechs"
+  },
+  "tone": "professional"
+}

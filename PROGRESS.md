@@ -2,14 +2,14 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 3 — Research pipeline (in progress)
+**Current step:** Phase 4 — Evidence verification (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
 | 0 | Environment & setup | ✅ done | 2026-11-05 | check_setup OK, pytest 10 passed; confirmed by user |
 | 1 | Groq connectivity | ✅ done | 2026-11-05 | both models OK in live list; live text+JSON reply; 24 unit + 1 integration pass |
 | 2 | Tavily connectivity | ✅ done | 2026-11-05 | live news search 5 results w/ dates, cached repeat 0 credits; 31 unit + 2 integration pass |
-| 3 | Research pipeline | 🔨 building | | |
+| 3 | Research pipeline | ✅ done (pending your review) | 2026-11-05 | live: 24 deduped records (person 9, company 10, hiring 5), 5 credits; 44 unit tests pass |
 | 4 | Evidence verification | ⬜ | | |
 | 5 | Signal ranking | ⬜ | | |
 | 6 | Draft generation | ⬜ | | |
@@ -40,3 +40,4 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - [x] Tavily key in backend/.env
 - [ ] Neon project (Phase 13/14)
 - [ ] GCP project + budget alert (Phase 14)
+- Phase 3 live run surfaced low-value sources (instagram.com, tavily.com knowledge page, job aggregators); Phase 4 credibility rules handle these.
