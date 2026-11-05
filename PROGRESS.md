@@ -2,14 +2,14 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 2 — Tavily connectivity (in progress)
+**Current step:** Phase 3 — Research pipeline (in progress)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
 | 0 | Environment & setup | ✅ done | 2026-11-05 | check_setup OK, pytest 10 passed; confirmed by user |
 | 1 | Groq connectivity | ✅ done | 2026-11-05 | both models OK in live list; live text+JSON reply; 24 unit + 1 integration pass |
-| 2 | Tavily connectivity | 🔨 building | | |
-| 3 | Research pipeline | ⬜ | | |
+| 2 | Tavily connectivity | ✅ done | 2026-11-05 | live news search 5 results w/ dates, cached repeat 0 credits; 31 unit + 2 integration pass |
+| 3 | Research pipeline | 🔨 building | | |
 | 4 | Evidence verification | ⬜ | | |
 | 5 | Signal ranking | ⬜ | | |
 | 6 | Draft generation | ⬜ | | |
