@@ -2,7 +2,6 @@
 
 The LLM output is only a proposal — verifier.py checks every quote against the source text in Python.
 """
-import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Literal
 
@@ -41,23 +40,14 @@ Rules:
 - If a source has no relevant factual claim, return nothing for it."""
 
 
-RATE_LIMIT_WAIT_S = 20  # one extra bounded wait when the free-tier per-minute token cap is hit
-
-
 def _extract_batch(p: ProspectInput, batch: list[ResearchRecord], model: str) -> tuple[list, dict, str | None]:
     user = f"Prospect: {p.name}, {p.title} at {p.company}\n\nSources:\n" + "\n\n".join(
         wrap_untrusted(r.id, r.title, r.url, r.content[:1200]) for r in batch
     )
-    out = None
-    for attempt in (1, 2):
-        try:
-            out, usage = groq_client.chat_json(ClaimExtraction, system=SYSTEM, user=user, model=model, max_tokens=2500)
-            break
-        except groq_client.LLMError as exc:
-            if attempt == 1 and "429" in str(exc):
-                time.sleep(RATE_LIMIT_WAIT_S)
-                continue
-            return [], {}, f"Claim extraction failed for {len(batch)} sources: {exc}"
+    try:
+        out, usage = groq_client.chat_json_patient(ClaimExtraction, system=SYSTEM, user=user, model=model, max_tokens=2500)
+    except groq_client.LLMError as exc:
+        return [], {}, f"Claim extraction failed for {len(batch)} sources: {exc}"
     by_id = {r.id: r for r in batch}
     pairs = [(c, by_id[c.source_id]) for c in out.claims if c.source_id in by_id]  # unknown ids are dropped
     return pairs, usage.as_dict(), None

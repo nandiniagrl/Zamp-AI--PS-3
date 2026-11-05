@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 from dataclasses import asdict, dataclass
 from typing import TypeVar
 
@@ -166,3 +167,18 @@ def chat_json(
                 {"role": "user", "content": f"That JSON failed validation:\n{last_err}\nReturn a corrected JSON object only."},
             ]
     raise LLMError(f"Model output did not match {schema.__name__} after {attempts} attempts.")
+
+
+RATE_LIMIT_WAIT_S = 20  # free-tier per-minute token caps reset quickly; wait once, then give up
+
+
+def chat_json_patient(schema: type[T], **kwargs) -> tuple[T, LLMUsage]:
+    """chat_json with ONE extra bounded wait if Groq's free-tier rate limit (429) is hit."""
+    try:
+        return chat_json(schema, **kwargs)
+    except LLMError as exc:
+        if "429" not in str(exc):
+            raise
+        log.warning("Groq rate limit hit; waiting %ss once before retrying", RATE_LIMIT_WAIT_S)
+        time.sleep(RATE_LIMIT_WAIT_S)
+        return chat_json(schema, **kwargs)

@@ -36,6 +36,7 @@ def fakes(monkeypatch):
         search, llm = FakeSearch(fx), FakeLLM(fx)
         monkeypatch.setattr(tavily_client, "search", search)
         monkeypatch.setattr(groq_client, "chat_json", llm)
+        monkeypatch.setattr(groq_client, "chat_json_patient", llm)
         return search, llm, fx
 
     return install

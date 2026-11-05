@@ -57,6 +57,16 @@ class FakeLLM:
         return {"claims": [{**c, "source_id": sid} for sid, url in self.SOURCE_RE.findall(user)
                            for c in by_url.get(url, [])]}
 
+    def _SignalAssessmentBatch(self, user):
+        """Scores keyed by a substring of the claim: {"funding": {"r": 9, "s": 8, "u": 8}}; default 5/5/5."""
+        rules = self.fx.get("scores", {})
+        out = []
+        for eid, claim in re.findall(r"id=(ev_\w+) \| claim=(.+?) \| type=", user):
+            s = next((v for k, v in rules.items() if k.lower() in claim.lower()), {"r": 5, "s": 5, "u": 5})
+            out.append({"evidence_id": eid, "business_relevance": s["r"], "specificity": s["s"],
+                        "outreach_usefulness": s["u"], "explanation": f"MOCK assessment for: {claim[:40]}"})
+        return {"assessments": out}
+
     def _next(self, name):
         seq = self.fx[name]
         if isinstance(seq, list):
