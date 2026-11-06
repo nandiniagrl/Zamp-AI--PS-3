@@ -67,6 +67,14 @@ class FakeLLM:
                         "outreach_usefulness": s["u"], "explanation": f"MOCK assessment for: {claim[:40]}"})
         return {"assessments": out}
 
+    def _DraftOutput(self, user):
+        """Next fixture draft; its 'claims_text' entries are attributed to the HOOK evidence id in the prompt."""
+        hook = re.search(r"HOOK evidence_id=(ev_\w+)", user).group(1)
+        d = dict(self._next("DraftOutput"))
+        claims = [{"text": c, "evidence_id": d.get("claim_evidence_id", hook)} for c in d.pop("claims_text", [])]
+        d.pop("claim_evidence_id", None)
+        return {**d, "claims_used": claims}
+
     def _next(self, name):
         seq = self.fx[name]
         if isinstance(seq, list):

@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 6 — Draft generation (waiting for your go-ahead)
+**Current step:** Phase 7 — Quality checker (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -11,8 +11,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 2 | Tavily connectivity | ✅ done | 2026-11-05 | live news search 5 results w/ dates, cached repeat 0 credits; 31 unit + 2 integration pass |
 | 3 | Research pipeline | ✅ done | 2026-11-05 | live: 24 deduped records (person 9, company 10, hiring 5), 5 credits; 44 unit tests pass |
 | 4 | Evidence verification | ✅ done | 2026-11-05 | live: 19 claims → 11 verified / 7 uncertain / 1 rejected, no 429s, ~12k tokens; 65 unit tests |
-| 5 | Signal ranking | ✅ done (pending your review) | 2026-11-05 | live: 11 verified ranked, top = Plasma partnership 70.5/100 w/ rationale, 1 Groq call ~2.1k tokens; 76 unit tests |
-| 6 | Draft generation | ⬜ | | |
+| 5 | Signal ranking | ✅ done | 2026-11-05 | live: 11 verified ranked, top = Plasma partnership 70.5/100 w/ rationale, 1 Groq call ~2.1k tokens; 76 unit tests |
+| 6 | Draft generation | ✅ done (pending your review) | 2026-11-05 | live: 71-word email on Plasma hook, claim linked to source, 1 Groq call ~1.1k tokens; 78 unit tests |
 | 7 | Quality checker | ⬜ | | |
 | 8 | LangGraph assembly | ⬜ | | |
 | 9A | Edge case A — ambiguous identity | ⬜ | | |
@@ -37,6 +37,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 ## Known issues / limitations
 - Phase 3 live run surfaced low-value sources (instagram, tavily.com directory, job aggregators); Phase 4 credibility rules mark them low.
 - Phase 4: verification is deliberately conservative — claims whose quote lacks a number/key terms become 'uncertain' (e.g. dates missing from quote).
+- Phase 6 live draft had small drift ("without building custom tooling" not in seller context; "Stripe announced" vs source "Plasma announced") — Phase 7 quality checker must catch these.
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 is a non-LTS line; switch to Node 24 LTS before Phase 12.
 - Project folder name contains a space — always quote paths.
