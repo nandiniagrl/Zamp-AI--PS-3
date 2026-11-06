@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from app.drafting.prompts import DRAFT_SYSTEM, DRAFT_USER, TONES
 from app.llm import groq_client  # call via module so tests can swap it
 from app.models import ClaimRef, Draft, Evidence, ProspectInput
-from app.utils.text import word_count
+from app.utils.text import body_without_signoff, word_count
 
 MIN_WORDS, MAX_WORDS = 70, 110
 
@@ -40,6 +40,6 @@ def generate_draft(p: ProspectInput, hook: Evidence, supporting: list[Evidence],
     draft = Draft(
         subject=out.subject.strip(), body=out.body.strip(), hook_evidence_id=hook.id,
         supporting_evidence_ids=[e.id for e in supporting[:1]], claims_used=out.claims_used,
-        word_count=word_count(out.body), version=version, tone=tone,
+        word_count=word_count(body_without_signoff(out.body)), version=version, tone=tone,
     )
     return draft, usage.as_dict()

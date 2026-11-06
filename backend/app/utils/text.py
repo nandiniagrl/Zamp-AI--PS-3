@@ -36,5 +36,12 @@ def company_match(a: str, b: str) -> bool:
     return fuzz.token_set_ratio(company_core(a), company_core(b)) >= 85
 
 
+_SIGNOFF = re.compile(r"\n\s*(best|regards|thanks|cheers|warmly),?\s*\n", re.I)
+
+
+def body_without_signoff(body: str) -> str:
+    return _SIGNOFF.split(body or "", maxsplit=1)[0]
+
+
 def word_count(text: str) -> int:
     return len(re.findall(r"\b[\w'-]+\b", text or ""))

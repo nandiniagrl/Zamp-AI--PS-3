@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 7 — Quality checker (waiting for your go-ahead)
+**Current step:** Phase 8 — Assemble LangGraph (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -12,8 +12,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 3 | Research pipeline | ✅ done | 2026-11-05 | live: 24 deduped records (person 9, company 10, hiring 5), 5 credits; 44 unit tests pass |
 | 4 | Evidence verification | ✅ done | 2026-11-05 | live: 19 claims → 11 verified / 7 uncertain / 1 rejected, no 429s, ~12k tokens; 65 unit tests |
 | 5 | Signal ranking | ✅ done | 2026-11-05 | live: 11 verified ranked, top = Plasma partnership 70.5/100 w/ rationale, 1 Groq call ~2.1k tokens; 76 unit tests |
-| 6 | Draft generation | ✅ done (pending your review) | 2026-11-05 | live: 71-word email on Plasma hook, claim linked to source, 1 Groq call ~1.1k tokens; 78 unit tests |
-| 7 | Quality checker | ⬜ | | |
+| 6 | Draft generation | ✅ done | 2026-11-05 | live: 71-word email on Plasma hook, claim linked to source, 1 Groq call ~1.1k tokens; 78 unit tests |
+| 7 | Quality checker | ✅ done (pending your review) | 2026-11-05 | flawed draft: 13 fails detected; real draft: caught "Stripe announced" misattribution; live loop bounded at 3 → needs-human, then passes after feedback fix; 85 unit tests |
 | 8 | LangGraph assembly | ⬜ | | |
 | 9A | Edge case A — ambiguous identity | ⬜ | | |
 | 9B | Edge case B — insufficient signals | ⬜ | | |
@@ -32,12 +32,13 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-05: Claim verification = quote present in source (title+snippet) AND claim grounded in quote AND association AND credibility/corroboration.
 - 2026-11-05: Rubric: Groq scores relevance/specificity/usefulness; credibility+recency computed from metadata; total in Python. Sensitive or <40 → not eligible as hook.
 - 2026-11-05: groq_client.chat_json_patient = one bounded 20s wait on free-tier 429, used by all AI steps.
+- 2026-11-05: Quality = deterministic rules (length fail <65/>120, banned phrases, unsupported figures, evidence ids, CTA, placeholders) + LLM judge with explanatory notes; max 2 auto-revisions then needs-human.
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
 
 ## Known issues / limitations
 - Phase 3 live run surfaced low-value sources (instagram, tavily.com directory, job aggregators); Phase 4 credibility rules mark them low.
 - Phase 4: verification is deliberately conservative — claims whose quote lacks a number/key terms become 'uncertain' (e.g. dates missing from quote).
-- Phase 6 live draft had small drift ("without building custom tooling" not in seller context; "Stripe announced" vs source "Plasma announced") — Phase 7 quality checker must catch these.
+- Phase 7: LLM judge caught the "Stripe announced" misattribution but did not flag "without building custom tooling" — the judge is probabilistic; human review (Phase 10) remains the final gate.
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 is a non-LTS line; switch to Node 24 LTS before Phase 12.
 - Project folder name contains a space — always quote paths.
