@@ -5,9 +5,13 @@ MAX_REVISIONS = 2  # automatic quality revisions → at most 3 drafts per round
 RESEARCH_NODES = ["research_person", "research_company", "research_hiring"]
 
 
-def route_after_resolve(state) -> list[str]:
-    # Phase 9A adds: "identity_clarify" when identity is ambiguous
-    return RESEARCH_NODES
+def route_after_resolve(state) -> str | list[str]:
+    """Edge Case A: ambiguous identity → pause for the user; otherwise fan out to the 3 research branches."""
+    return "identity_clarify" if state["identity"]["status"] == "ambiguous" else RESEARCH_NODES
+
+
+def route_after_identity(state) -> str | list[str]:
+    return END if state.get("status") == "aborted" else RESEARCH_NODES
 
 
 def route_after_rank(state) -> str:

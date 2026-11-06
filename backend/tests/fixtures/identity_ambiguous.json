@@ -1,0 +1,63 @@
+{
+  "_note": "MOCK DATA (Edge Case A). Two real-sounding namesakes at OTHER companies; none at the entered company.",
+  "prospect": {
+    "name": "Rahul Sharma",
+    "company": "Acme Analytics",
+    "title": "VP Sales",
+    "seller": {
+      "product": "PipeWise",
+      "value_proposition": "Forecasts B2B sales pipeline risk so sales leaders can act earlier."
+    }
+  },
+  "search": {
+    "identity": [
+      {
+        "title": "Rahul Sharma - VP Sales - Infosys",
+        "url": "https://people.example/rahul-sharma-infosys",
+        "content": "Rahul Sharma is Vice President of Sales at Infosys based in Bengaluru.",
+        "score": 0.8
+      },
+      {
+        "title": "Rahul Sharma joins Zeta as VP Sales",
+        "url": "https://news.example/zeta-hires-rahul-sharma",
+        "content": "Zeta has appointed Rahul Sharma as VP Sales for its APAC business.",
+        "score": 0.7
+      },
+      {
+        "title": "Ravi Sharma speaks at SaaS summit",
+        "url": "https://news.example/ravi-sharma",
+        "content": "Ravi Sharma, CTO of Acme Analytics, spoke about data platforms.",
+        "score": 0.5
+      }
+    ],
+    "person": [],
+    "company": [],
+    "hiring": []
+  },
+  "llm": {
+    "people_by_url": {
+      "https://people.example/rahul-sharma-infosys": [
+        {
+          "name": "Rahul Sharma",
+          "title": "Vice President of Sales",
+          "company": "Infosys"
+        }
+      ],
+      "https://news.example/zeta-hires-rahul-sharma": [
+        {
+          "name": "Rahul Sharma",
+          "title": "VP Sales",
+          "company": "Zeta"
+        }
+      ],
+      "https://news.example/ravi-sharma": [
+        {
+          "name": "Rahul Sharma",
+          "title": "CTO",
+          "company": "Acme Analytics"
+        }
+      ]
+    },
+    "claims_by_url": {}
+  }
+}

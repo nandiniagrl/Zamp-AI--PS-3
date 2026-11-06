@@ -57,6 +57,12 @@ class FakeLLM:
         return {"claims": [{**c, "source_id": sid} for sid, url in self.SOURCE_RE.findall(user)
                            for c in by_url.get(url, [])]}
 
+    def _IdentityExtraction(self, user):
+        """People named in each <source> present in the prompt (keyed by URL in 'people_by_url')."""
+        by_url = self.fx.get("people_by_url", {})
+        return {"people": [{**p, "source_id": sid} for sid, url in self.SOURCE_RE.findall(user)
+                           for p in by_url.get(url, [])]}
+
     def _SignalAssessmentBatch(self, user):
         """Scores keyed by a substring of the claim: {"funding": {"r": 9, "s": 8, "u": 8}}; default 5/5/5."""
         rules = self.fx.get("scores", {})

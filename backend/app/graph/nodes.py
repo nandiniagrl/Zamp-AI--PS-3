@@ -2,9 +2,13 @@
 Each node appends a human-readable `progress` entry so every step is inspectable."""
 from datetime import datetime, timezone
 
+from langgraph.types import interrupt
+
 from app.drafting.generator import generate_draft
 from app.graph import routing
-from app.models import Draft, Evidence, ProspectInput, RankedSignal, ResearchRecord
+from app.identity import resolver
+from app.models import (Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
+                        ResearchRecord)
 from app.quality.checker import check_draft
 from app.ranking.ranker import rank_signals as rank
 from app.research import pipeline
@@ -27,13 +31,39 @@ def _dump(items) -> list[dict]:
     return [i.model_dump(mode="json") for i in items]
 
 
-# ---------------------------------------------------------------- identity
+EDGE_TITLES = {"A": "Ambiguous prospect identity", "B": "Insufficient public signals",
+               "C": "Sensitive company news", "D": "Conflicting or outdated evidence"}
+
+
+def _edge(case: str, message: str, action: str) -> list[dict]:
+    """An edge-case record shown to the user: what happened and what the agent did about it."""
+    return [{"case": case, "title": EDGE_TITLES[case], "message": message, "action": action, "ts": _now()}]
+
+
+# ---------------------------------------------------------------- identity (Edge Case A)
 def resolve_prospect(state):
-    """Phase 8 placeholder: identity is accepted as entered. Phase 9A adds real identity resolution."""
-    p = _p(state)
-    identity = {"status": "confirmed", "candidates": [], "selected_id": None,
-                "explanation": f"Using {p.name}, {p.title} at {p.company} as entered (identity checks added in Phase 9A)."}
-    return {"identity": identity, "status": "researching", "progress": _progress("resolve_prospect", identity["explanation"])}
+    res, usage = resolver.resolve_identity(_p(state))
+    upd = {"identity": res.model_dump(mode="json"), "usage": usage, "status": "researching",
+           "progress": _progress("resolve_prospect", f"[{res.status}] {res.explanation}")}
+    if res.status == "ambiguous":
+        upd |= {"status": "awaiting_identity",
+                "edge_cases": _edge("A", res.explanation, "Paused for you to choose the correct person (no guessing).")}
+    return upd
+
+
+def identity_clarify(state):
+    """Pauses the graph (LangGraph interrupt). Nothing before interrupt() has side effects, because the node
+    re-runs from the top when resumed."""
+    ident = IdentityResolution.model_validate(state["identity"])
+    answer = interrupt({"type": "identity", "message": ident.explanation,
+                        "candidates": _dump(ident.candidates),
+                        "options": {"candidate_id": "pick one of the candidates",
+                                    "company_only": "skip person research", "abort": "stop this run"}})
+    choice = IdentityChoice.model_validate(answer)
+    ident, prospect = resolver.apply_choice(ident, choice, _p(state))
+    return {"identity": ident.model_dump(mode="json"), "prospect": prospect.model_dump(mode="json"),
+            "status": "aborted" if choice.abort else "researching",
+            "progress": _progress("identity_clarify", ident.explanation)}
 
 
 # ---------------------------------------------------------------- research (3 parallel branches)

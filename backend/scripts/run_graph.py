@@ -2,6 +2,8 @@
 
   python -m scripts.run_graph --input samples/prospect_example.json   # LIVE (≈5 Tavily credits + Groq)
   python -m scripts.run_graph --fixture happy_path                    # MOCK data, no API calls
+  python -m scripts.run_graph --fixture identity_ambiguous --resume '{"candidate_id": "c2"}'
+      --resume answers a pause (interrupt) with JSON; repeat it to answer several pauses in order.
 """
 import argparse
 import json
@@ -10,6 +12,7 @@ import uuid
 from pathlib import Path
 
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.types import Command
 
 from app.graph.builder import build_graph
 from app.graph.state import initial_state
@@ -35,6 +38,7 @@ def main() -> int:
     src.add_argument("--input", help="prospect JSON (live run)")
     src.add_argument("--fixture", help="MOCK fixture name in tests/fixtures (no API calls)")
     ap.add_argument("--json", help="save final state here")
+    ap.add_argument("--resume", action="append", default=[], help="JSON answer for the next pause")
     args = ap.parse_args()
 
     if args.fixture:
@@ -47,13 +51,30 @@ def main() -> int:
     config = {"configurable": {"thread_id": run_id}, "recursion_limit": 60}
     print(f"Run {run_id}: {prospect.name} — {prospect.title} at {prospect.company}\n")
     start = time.time()
-    for chunk in graph.stream(initial_state(run_id, prospect.model_dump(mode="json")), config, stream_mode="updates"):
-        for node, update in chunk.items():
-            if node == "__interrupt__":
-                print(f"⏸  PAUSED: {update[0].value.get('type')} — {update[0].value.get('message', '')}")
-                continue
-            for p in (update or {}).get("progress", []):
-                print(f"[{time.time() - start:5.1f}s] ▶ {node:18s} {p['message']}")
+    payload = initial_state(run_id, prospect.model_dump(mode="json"))
+    answers = list(args.resume)
+    while True:
+        for chunk in graph.stream(payload, config, stream_mode="updates"):
+            for node, update in chunk.items():
+                if node == "__interrupt__":
+                    continue
+                for p in (update or {}).get("progress", []):
+                    print(f"[{time.time() - start:5.1f}s] ▶ {node:18s} {p['message']}")
+        snap = graph.get_state(config)
+        if not snap.interrupts:
+            break
+        pending = snap.interrupts[0].value
+        print(f"\n⏸  PAUSED ({pending['type']}): {pending.get('message', '')}")
+        for c in pending.get("candidates", []):
+            print(f"     {c['id']}: {c['name']} — {c.get('title')} at {c.get('company')}  ({c['source_url']})")
+        if pending.get("options"):
+            print(f"     options: {json.dumps(pending['options'])}")
+        if not answers:
+            print("\n(Re-run with --resume '<json>' to answer this pause.)")
+            break
+        answer = json.loads(answers.pop(0))
+        print(f"▶ resuming with {answer}\n")
+        payload = Command(resume=answer)
 
     state = graph.get_state(config).values
     print(f"\nSTATUS: {state.get('status')}")

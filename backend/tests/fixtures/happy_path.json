@@ -60,6 +60,14 @@
         "content": "Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation.",
         "score": 0.66
       }
+    ],
+    "identity": [
+      {
+        "title": "Priya Menon - VP Finance - Acme Analytics",
+        "url": "https://acmeanalytics.com/team/priya-menon",
+        "content": "Priya Menon is VP Finance at Acme Analytics, leading finance operations.",
+        "score": 0.9
+      }
     ]
   },
   "llm": {
@@ -171,6 +179,15 @@
         "notes": [],
         "addressed_to_prospect_company": true
       }
-    ]
+    ],
+    "people_by_url": {
+      "https://acmeanalytics.com/team/priya-menon": [
+        {
+          "name": "Priya Menon",
+          "title": "VP Finance",
+          "company": "Acme Analytics"
+        }
+      ]
+    }
   }
 }

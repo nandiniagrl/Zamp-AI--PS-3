@@ -6,6 +6,7 @@ config:
 graph TD;
 	__start__([<p>__start__</p>]):::first
 	resolve_prospect(resolve_prospect)
+	identity_clarify(identity_clarify)
 	research_person(research_person)
 	research_company(research_company)
 	research_hiring(research_hiring)
@@ -17,6 +18,10 @@ graph TD;
 	__end__([<p>__end__</p>]):::last
 	__start__ --> resolve_prospect;
 	draft_email --> quality_check;
+	identity_clarify -.-> __end__;
+	identity_clarify -.-> research_company;
+	identity_clarify -.-> research_hiring;
+	identity_clarify -.-> research_person;
 	quality_check -.-> draft_email;
 	quality_check -.-> finalize_draft;
 	rank_signals -.-> __end__;
@@ -24,6 +29,7 @@ graph TD;
 	research_company --> verify_evidence;
 	research_hiring --> verify_evidence;
 	research_person --> verify_evidence;
+	resolve_prospect -.-> identity_clarify;
 	resolve_prospect -.-> research_company;
 	resolve_prospect -.-> research_hiring;
 	resolve_prospect -.-> research_person;

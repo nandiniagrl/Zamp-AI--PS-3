@@ -24,8 +24,9 @@ def test_happy_path_runs_end_to_end(fakes):
     top = next(r for r in state["ranked"] if r["eligible_for_hook"])
     assert state["draft"]["hook_evidence_id"] == top["evidence_id"] == state["selected_evidence_id"]
     assert "raised $40M" in top["claim"]
-    # 6 sources → 2 extraction batches + rank + draft + judge = 5 Groq calls; 5 searches = 5 credits
-    assert state["usage"]["groq_calls"] == 5 and state["usage"]["tavily_credits"] == 5   # summed across nodes
+    # identity 1 + 6 sources → 2 extraction batches + rank + draft + judge = 6 Groq calls;
+    # 2 identity + 5 research searches = 7 credits
+    assert state["usage"]["groq_calls"] == 6 and state["usage"]["tavily_credits"] == 7   # summed across nodes
     assert len(state["progress"]) == len(visited)                                         # every node reported
 
 

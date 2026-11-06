@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 9A — Edge case A: ambiguous identity (waiting for your go-ahead)
+**Current step:** Phase 9B — Edge case B: insufficient signals (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -14,8 +14,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 5 | Signal ranking | ✅ done | 2026-11-05 | live: 11 verified ranked, top = Plasma partnership 70.5/100 w/ rationale, 1 Groq call ~2.1k tokens; 76 unit tests |
 | 6 | Draft generation | ✅ done | 2026-11-05 | live: 71-word email on Plasma hook, claim linked to source, 1 Groq call ~1.1k tokens; 78 unit tests |
 | 7 | Quality checker | ✅ done | 2026-11-05 | flawed draft: 13 fails detected; real draft: caught "Stripe announced" misattribution; live loop bounded at 3 → needs-human, then passes after feedback fix; 85 unit tests |
-| 8 | LangGraph assembly | ✅ done (pending your review) | 2026-11-05 | live end-to-end via LangGraph: parallel research → verify → rank → draft⇄QC (1 revision, passed), 60s, 9 Groq calls; MOCK run; docs/graph.mmd; 93 unit tests |
-| 9A | Edge case A — ambiguous identity | ⬜ | | |
+| 8 | LangGraph assembly | ✅ done | 2026-11-05 | live end-to-end via LangGraph: parallel research → verify → rank → draft⇄QC (1 revision, passed), 60s, 9 Groq calls; MOCK run; docs/graph.mmd; 93 unit tests |
+| 9A | Edge case A — ambiguous identity | ✅ done (pending your review) | 2026-11-05 | live: Collison@Stripe confirmed; "Rahul Sharma"@made-up co → ambiguous (3 namesakes), pauses; MOCK pause+resume (candidate / company-only / abort); hallucinated candidate rejected; 103 unit tests |
 | 9B | Edge case B — insufficient signals | ⬜ | | |
 | 9C | Edge case C — sensitive news | ⬜ | | |
 | 9D | Edge case D — conflicting evidence | ⬜ | | |
@@ -33,6 +33,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-05: Rubric: Groq scores relevance/specificity/usefulness; credibility+recency computed from metadata; total in Python. Sensitive or <40 → not eligible as hook.
 - 2026-11-05: groq_client.chat_json_patient = one bounded 20s wait on free-tier 429, used by all AI steps.
 - 2026-11-05: Quality = deterministic rules (length fail <65/>120, banned phrases, unsupported figures, evidence ids, CTA, placeholders) + LLM judge with explanatory notes; max 2 auto-revisions then needs-human.
+- 2026-11-05: Identity = 2 Tavily searches (with/without company) + LLM people extraction grounded in snippet; confirmed only if a match is at the entered company; ambiguous → LangGraph interrupt (pick / company-only / abort). Adds ~2 credits + 1 Groq call per run.
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
 
 ## Known issues / limitations
