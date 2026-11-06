@@ -25,8 +25,11 @@ def run_rules(d: Draft, allowed: dict[str, Evidence], seller_text: str) -> list[
 
     core = body_without_signoff(d.body)
     wc = word_count(core)
-    if wc < 65 or wc > 120:
-        add("conciseness", "fail", f"Body is {wc} words; rewrite to 70-110 words.")
+    if wc < 65:
+        add("conciseness", "fail", f"Body is only {wc} words; it must be 70-110. Add about {90 - wc} words: one more "
+                                   "specific sentence linking the hook to the prospect's likely challenge.")
+    elif wc > 120:
+        add("conciseness", "fail", f"Body is {wc} words; it must be 70-110. Cut about {wc - 90} words.")
     elif wc < 70 or wc > 110:
         add("conciseness", "warn", f"Body is {wc} words (target 70-110).")
 

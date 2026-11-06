@@ -1,0 +1,34 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	resolve_prospect(resolve_prospect)
+	research_person(research_person)
+	research_company(research_company)
+	research_hiring(research_hiring)
+	verify_evidence(verify_evidence)
+	rank_signals(rank_signals)
+	draft_email(draft_email)
+	quality_check(quality_check)
+	finalize_draft(finalize_draft)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> resolve_prospect;
+	draft_email --> quality_check;
+	quality_check -.-> draft_email;
+	quality_check -.-> finalize_draft;
+	rank_signals -.-> __end__;
+	rank_signals -.-> draft_email;
+	research_company --> verify_evidence;
+	research_hiring --> verify_evidence;
+	research_person --> verify_evidence;
+	resolve_prospect -.-> research_company;
+	resolve_prospect -.-> research_hiring;
+	resolve_prospect -.-> research_person;
+	verify_evidence --> rank_signals;
+	finalize_draft --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

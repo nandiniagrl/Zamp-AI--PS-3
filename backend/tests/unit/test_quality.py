@@ -55,7 +55,8 @@ def test_figure_present_in_evidence_is_allowed():
 
 def _judge(**overrides):
     base = {"factual_statements_supported": True, "unsupported_statements": [], "hook_relevant_to_offer": True,
-            "specific_not_generic": True, "seller_claims_supported": True, "tone_appropriate": True}
+            "specific_not_generic": True, "seller_claims_supported": True, "tone_appropriate": True,
+            "addressed_to_prospect_company": True}
     return {**base, **overrides}
 
 
@@ -98,3 +99,17 @@ def test_always_flawed_stops_after_three_and_flags_human(monkeypatch):
     res = loop.draft_until_pass(P, HOOK, [])
     assert res.attempts == 3 and not res.report.passed and res.report.needs_human
     assert fake.calls.count("DraftOutput") == 3
+
+
+def test_wrong_company_cta_is_a_failure(monkeypatch):
+    fake = FakeLLM({"llm": {"QualityJudgement": [_judge(addressed_to_prospect_company=False)]}})
+    monkeypatch.setattr(groq_client, "chat_json_patient", fake)
+    report, _ = check_draft(_draft(CLEAN_BODY), P, ALLOWED)
+    assert not report.passed and any("wrong company" in f for f in report.revision_feedback)
+    assert "PROSPECT (the reader): Priya Menon, VP Finance at Acme Analytics" in fake.prompts[0]
+
+
+def test_short_draft_feedback_says_how_many_words_to_add():
+    short = "Hi Priya,\n\nSaw the Acme Analytics news about the $40M raise. Would a chat help?\n\nBest,\n[Your name]"
+    msg = next(i.message for i in run_rules(_draft(short), ALLOWED, P.seller.as_text()) if i.check == "conciseness")
+    assert "Add about" in msg

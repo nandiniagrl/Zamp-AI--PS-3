@@ -53,3 +53,10 @@ def test_generate_parses_draft_and_counts_words(llm):
     assert draft.claims_used[0].evidence_id == "ev_hook"
     assert 70 <= draft.word_count <= 110 and draft.version == 2 and not draft.edited_by_human
     assert usage["groq_calls"] == 1
+
+
+def test_missing_signoff_is_added_once():
+    from app.drafting.generator import ensure_signoff
+    assert ensure_signoff("Hi Priya, would a chat help?").endswith("Best,\n[Your name]")
+    already = "Hi Priya, would a chat help?\n\nBest,\n[Your name]"
+    assert ensure_signoff(already) == already

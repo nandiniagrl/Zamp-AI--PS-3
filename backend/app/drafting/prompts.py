@@ -11,6 +11,8 @@ Hard rules:
 1. Body (excluding the sign-off) is {min_words}-{max_words} words — aim for about 90 — plain text, no markdown or bullets. Start with "Hi {first_name},".
 2. Open with ONE specific observation based ONLY on the HOOK evidence. Paraphrase naturally; do not quote at length.
    Keep who-did-what exactly as in the evidence (if another company made the announcement, say that company announced it).
+   The reader is {name}, {title} at {company}. Every "you/your team" and the call to action must be about {company},
+   never about another company mentioned in the evidence.
 3. Connect that observation to the seller's value proposition in 1-2 sentences. Describe the seller ONLY using SELLER CONTEXT: no invented features, customers, metrics, ROI or percentages.
 4. End with exactly one low-pressure question as the call to action. No calendar links, urgency or pressure.
 5. No flattery (impressive, amazing, big fan), no cliches (hope this finds you well, touch base, circle back, synergy, game-changer), no exclamation marks.

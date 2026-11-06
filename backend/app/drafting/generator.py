@@ -15,6 +15,15 @@ class DraftOutput(BaseModel):
     claims_used: list[ClaimRef] = Field(default_factory=list)
 
 
+SIGNOFF = "Best,\n[Your name]"
+
+
+def ensure_signoff(body: str) -> str:
+    """Deterministically add the sign-off if the model dropped it (free, no extra LLM call)."""
+    body = body.strip()
+    return body if body_without_signoff(body) != body else f"{body}\n\n{SIGNOFF}"
+
+
 def build_prompts(p: ProspectInput, hook: Evidence, supporting: list[Evidence], *, tone: str,
                   feedback: list[str] | None = None, instructions: str | None = None) -> tuple[str, str]:
     sup = "".join(f"\nSUPPORTING evidence_id={e.id}: {e.claim} (source: {e.source_domain})" for e in supporting[:1])
@@ -28,6 +37,7 @@ def build_prompts(p: ProspectInput, hook: Evidence, supporting: list[Evidence], 
         feedback=("\nFIX THESE ISSUES FROM THE QUALITY CHECK:\n- " + "\n- ".join(feedback) + "\n") if feedback else "",
     )
     system = DRAFT_SYSTEM.format(min_words=MIN_WORDS, max_words=MAX_WORDS, first_name=p.name.split()[0],
+                                 name=p.name, title=p.title, company=p.company,
                                  tone=TONES.get(tone, TONES["professional"]))
     return system, user
 
@@ -37,9 +47,10 @@ def generate_draft(p: ProspectInput, hook: Evidence, supporting: list[Evidence],
                    instructions: str | None = None) -> tuple[Draft, dict]:
     system, user = build_prompts(p, hook, supporting, tone=tone, feedback=feedback, instructions=instructions)
     out, usage = groq_client.chat_json_patient(DraftOutput, system=system, user=user, temperature=0.6, max_tokens=1500)
+    body = ensure_signoff(out.body)
     draft = Draft(
-        subject=out.subject.strip(), body=out.body.strip(), hook_evidence_id=hook.id,
+        subject=out.subject.strip(), body=body, hook_evidence_id=hook.id,
         supporting_evidence_ids=[e.id for e in supporting[:1]], claims_used=out.claims_used,
-        word_count=word_count(body_without_signoff(out.body)), version=version, tone=tone,
+        word_count=word_count(body_without_signoff(body)), version=version, tone=tone,
     )
     return draft, usage.as_dict()
