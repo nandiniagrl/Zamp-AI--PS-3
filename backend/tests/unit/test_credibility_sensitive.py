@@ -26,6 +26,8 @@ def test_official_domain_detection():
     ("boards.greenhouse.io", "funding", "low"),
     ("instagram.com", "other", "low"),
     ("randomblog.example", "funding", "low"),
+    ("economictimes.indiatimes.com", "expansion", "high"),   # full-host match (regression)
+    ("timesofindia.indiatimes.com", "expansion", "low"),
 ])
 def test_credibility_levels(domain, ctype, level):
     assert assess(domain, ctype, "Stripe")[0] == level

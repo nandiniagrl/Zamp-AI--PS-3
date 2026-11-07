@@ -39,20 +39,26 @@ def is_official(domain: str, company: str) -> bool:
     return len(slug) >= 3 and (slug == label or (len(slug) >= 5 and label.startswith(slug)))
 
 
+def _in(domain: str, reg: str, names: set[str]) -> bool:
+    """Match either the full host (economictimes.indiatimes.com) or the registrable domain (techcrunch.com)."""
+    host = domain.lower().removeprefix("www.")
+    return host in names or reg in names
+
+
 def assess(domain: str, claim_type: str, company: str) -> tuple[str, str]:
     reg = registrable(domain)
     if is_official(domain, company):
         return "high", "Official company source"
-    if reg in HIGH or reg.endswith((".gov", ".edu", ".gov.in")):
+    if _in(domain, reg, HIGH) or reg.endswith((".gov", ".edu", ".gov.in")):
         return "high", "Established news / official publication"
-    if reg in PRESS_WIRES:
+    if _in(domain, reg, PRESS_WIRES):
         return "medium", "Press release (self-published announcement)"
-    if reg in JOB_BOARDS:
+    if _in(domain, reg, JOB_BOARDS):
         if claim_type == "hiring":
             return "medium", "Job board listing"
         return "low", "Job board used for a non-hiring claim"
-    if reg in MEDIUM:
+    if _in(domain, reg, MEDIUM):
         return "medium", "Secondary reference source"
-    if reg in LOW:
+    if _in(domain, reg, LOW):
         return "low", "User-generated, social or data-broker source"
     return "low", "Unrecognised publisher — needs corroboration"

@@ -75,6 +75,8 @@ def resolve_identity(p: ProspectInput) -> tuple[IdentityResolution, dict]:
         key = company_core(person.company or "") or f"unknown-{rec.id}"
         if key in merged:  # same name + same employer = same person
             continue
+        if any(c.source_url == rec.url for c in merged.values()):
+            continue  # one profile page = one person (later entries are their career history, not namesakes)
         merged[key] = IdentityCandidate(
             id=f"c{len(merged) + 1}", name=person.name, title=person.title, company=person.company,
             source_url=rec.url, snippet=rec.content[:200],

@@ -2,6 +2,8 @@
 from langgraph.graph import END
 
 MAX_REVISIONS = 2  # automatic quality revisions → at most 3 drafts per round
+MAX_BROADEN = 1  # automatic broadened searches when no usable hook is found
+MAX_CONTEXT_ROUNDS = 1  # extra research rounds driven by user-supplied context
 RESEARCH_NODES = ["research_person", "research_company", "research_hiring"]
 
 
@@ -15,10 +17,13 @@ def route_after_identity(state) -> str | list[str]:
 
 
 def route_after_rank(state) -> str:
-    # Phase 9B/9C add: broaden_research / insufficient_evidence / sensitive_judgment
+    """Edge Case B: no usable hook → broaden once (plus once per user-context round) → then ask the user.
+    (Phase 9C adds the sensitive-only branch.)"""
     if any(r["eligible_for_hook"] for r in state.get("ranked", [])):
         return "draft_email"
-    return END
+    if state.get("broaden_attempts", 0) < MAX_BROADEN + state.get("context_rounds", 0):
+        return "broaden_research"
+    return "insufficient_evidence"
 
 
 def route_after_quality(state) -> str:

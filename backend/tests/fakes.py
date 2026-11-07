@@ -20,13 +20,14 @@ class FakeSearch:
     def __init__(self, fixture: dict):
         self.fx = fixture.get("search", {})
         self.fail = set(fixture.get("fail_branches", []))
+        self.by_query = fixture.get("search_by_query", {})  # {"query substring": rows} — checked before branch
         self.calls: list[tuple[str, str]] = []
 
     def __call__(self, query, *, branch="general", **kwargs):
         self.calls.append((branch, query))
         if branch in self.fail:
             return SearchResponse(query=query, branch=branch, error="Tavily search failed (MOCK outage).")
-        rows = self.fx.get(branch, [])
+        rows = next((r for k, r in self.by_query.items() if k.lower() in query.lower()), self.fx.get(branch, []))
         return SearchResponse(
             query=query, branch=branch, credits=1,
             results=[SearchResult(domain=domain_of(r["url"]), **r) for r in rows],

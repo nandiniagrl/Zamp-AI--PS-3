@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 9B — Edge case B: insufficient signals (waiting for your go-ahead)
+**Current step:** Phase 9C — Edge case C: sensitive news (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -15,8 +15,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 6 | Draft generation | ✅ done | 2026-11-05 | live: 71-word email on Plasma hook, claim linked to source, 1 Groq call ~1.1k tokens; 78 unit tests |
 | 7 | Quality checker | ✅ done | 2026-11-05 | flawed draft: 13 fails detected; real draft: caught "Stripe announced" misattribution; live loop bounded at 3 → needs-human, then passes after feedback fix; 85 unit tests |
 | 8 | LangGraph assembly | ✅ done | 2026-11-05 | live end-to-end via LangGraph: parallel research → verify → rank → draft⇄QC (1 revision, passed), 60s, 9 Groq calls; MOCK run; docs/graph.mmd; 93 unit tests |
-| 9A | Edge case A — ambiguous identity | ✅ done (pending your review) | 2026-11-05 | live: Collison@Stripe confirmed; "Rahul Sharma"@made-up co → ambiguous (3 namesakes), pauses; MOCK pause+resume (candidate / company-only / abort); hallucinated candidate rejected; 103 unit tests |
-| 9B | Edge case B — insufficient signals | ⬜ | | |
+| 9A | Edge case A — ambiguous identity | ✅ done | 2026-11-05 | live: Collison@Stripe confirmed; "Rahul Sharma"@made-up co → ambiguous (3 namesakes), pauses; MOCK pause+resume (candidate / company-only / abort); hallucinated candidate rejected; 103 unit tests |
+| 9B | Edge case B — insufficient signals | ✅ done (pending your review) | 2026-11-05 | live: made-up company → company-only → broaden once → "Insufficient verified research" pause; MOCK: add-context finds verified source → draft; bounded to 1 context round; 110 unit tests |
 | 9C | Edge case C — sensitive news | ⬜ | | |
 | 9D | Edge case D — conflicting evidence | ⬜ | | |
 | 10 | Human-in-the-loop | ⬜ | | |
@@ -42,6 +42,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - Phase 7: LLM judge caught the "Stripe announced" misattribution but did not flag "without building custom tooling" — the judge is probabilistic; human review (Phase 10) remains the final gate.
 - Phase 8 live run found the writer addressing the CTA to the hook's other company (Plasma) — fixed: prospect identity now in writer + judge prompts, new required judge check addressed_to_prospect_company.
 - A full live run takes ~60s and ~20k Groq tokens (mostly Groq latency, ~5-10s per call) — measure/optimise in Phase 15.
+- Phase 9B fixed: credibility now matches full host (economictimes.indiatimes.com was wrongly 'low'); identity resolver treats one profile page as one person (career history was shown as 5 namesakes).
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 is a non-LTS line; switch to Node 24 LTS before Phase 12.
 - Project folder name contains a space — always quote paths.

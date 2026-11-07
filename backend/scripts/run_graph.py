@@ -76,8 +76,10 @@ def main() -> int:
         print(f"▶ resuming with {answer}\n")
         payload = Command(resume=answer)
 
-    state = graph.get_state(config).values
-    print(f"\nSTATUS: {state.get('status')}")
+    snap = graph.get_state(config)
+    state = snap.values
+    status = f"paused — waiting for your '{snap.interrupts[0].value['type']}' answer" if snap.interrupts else state.get("status")
+    print(f"\nSTATUS: {status}")
     if state.get("top_explanation"):
         print(f"\nWHY THIS HOOK: {state['top_explanation']}")
     if d := state.get("draft"):

@@ -2,16 +2,19 @@
 Each node appends a human-readable `progress` entry so every step is inspectable."""
 from datetime import datetime, timezone
 
-from langgraph.types import interrupt
+from typing import Literal
+
+from langgraph.graph import END
+from langgraph.types import Command, interrupt
 
 from app.drafting.generator import generate_draft
 from app.graph import routing
 from app.identity import resolver
-from app.models import (Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
+from app.models import (ContextDecision, Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
                         ResearchRecord)
 from app.quality.checker import check_draft
 from app.ranking.ranker import rank_signals as rank
-from app.research import pipeline
+from app.research import pipeline, queries
 from app.verification import verifier
 
 
@@ -108,9 +111,47 @@ def rank_signals(state):
     n_eligible = sum(r.eligible_for_hook for r in result.ranked)
     upd = {"ranked": _dump(result.ranked), "top_explanation": result.top_explanation, "usage": result.usage,
            "progress": _progress("rank_signals", f"{n_eligible} eligible of {len(result.ranked)} ranked")}
-    if n_eligible == 0:
-        upd["status"] = "insufficient"  # Phase 9B replaces this with broaden → ask-for-context
     return upd
+
+
+# ---------------------------------------------------------------- Edge Case B: insufficient signals
+def broaden_research(state):
+    """Widen the search toward verified company context and role priorities (+ user context if given)."""
+    p = _p(state)
+    user_context = state.get("user_context")
+    res = pipeline.run_queries("broadened", queries.broadened_queries(p, user_context))
+    why = f"Searching again with your context: \"{user_context}\"." if user_context else \
+        "Broadened search to verified company context and role-relevant priorities."
+    return {"research": _dump(res.records), "research_errors": res.errors, "usage": res.usage,
+            "broaden_attempts": state.get("broaden_attempts", 0) + 1, "status": "researching",
+            "edge_cases": _edge("B", "No credible, specific, recent signal was usable as an outreach hook.", why),
+            "progress": _progress("broaden_research", f"{len(res.records)} broadened sources")}
+
+
+def _context_or_abstain(state, kind: str, payload: dict) -> Command:
+    """Shared pause: user adds context (one bounded extra research round) or abstains. Never fabricates a hook."""
+    can_add = state.get("context_rounds", 0) < routing.MAX_CONTEXT_ROUNDS
+    decision = ContextDecision.model_validate(interrupt({**payload, "can_add_context": can_add}))
+    if decision.action == "add_context" and decision.context and can_add:
+        return Command(goto="broaden_research", update={
+            "user_context": decision.context.strip(), "context_rounds": state.get("context_rounds", 0) + 1,
+            "status": "researching", "progress": _progress(kind, f"Reviewer added context: {decision.context.strip()}")})
+    final = "insufficient" if kind == "insufficient_evidence" else "abstained"
+    return Command(goto=END, update={"status": final,
+                                     "progress": _progress(kind, "Stopped without drafting — no fabricated hook.")})
+
+
+def insufficient_evidence(state) -> Command[Literal["broaden_research", "__end__"]]:
+    counts = {s: sum(e["verification_status"] == s for e in state.get("evidence", []))
+              for s in ("verified", "uncertain", "rejected")}
+    return _context_or_abstain(state, "insufficient_evidence", {
+        "type": "insufficient",
+        "message": "Insufficient verified research",
+        "detail": ("No credible, specific signal could be verified, even after broadening the search "
+                   f"({counts['verified']} verified, {counts['uncertain']} uncertain, {counts['rejected']} rejected claims). "
+                   "Add context — e.g. a recent announcement, initiative or topic to look for — or stop."),
+        "options": {"add_context": "provide context and search once more", "abstain": "stop without a draft"},
+    })
 
 
 # ---------------------------------------------------------------- drafting & quality

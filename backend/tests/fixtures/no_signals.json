@@ -1,0 +1,106 @@
+{
+  "_note": "MOCK DATA (Edge Case B). Only weak/unverifiable sources exist for this fictional company.",
+  "prospect": {
+    "name": "Meera Iyer",
+    "company": "Quietfield Labs",
+    "title": "Head of Operations",
+    "seller": {
+      "product": "ShiftGrid",
+      "value_proposition": "Plans warehouse staffing automatically so operations leaders cut overtime."
+    }
+  },
+  "search": {
+    "identity": [],
+    "person": [],
+    "hiring": [],
+    "company": [
+      {
+        "title": "Quietfield Labs - Company Profile",
+        "url": "https://www.zoominfo.com/c/quietfield-labs/123",
+        "content": "Quietfield Labs is a company with 50-200 employees. Quietfield Labs revenue is estimated at $10M-$50M.",
+        "score": 0.6
+      }
+    ],
+    "broadened": [
+      {
+        "title": "Quietfield Labs review",
+        "url": "https://smallblog.example/quietfield-labs",
+        "content": "I heard Quietfield Labs is planning a new warehouse in Pune soon.",
+        "score": 0.4
+      }
+    ]
+  },
+  "search_by_query": {
+    "Pune warehouse opening": [
+      {
+        "title": "Quietfield Labs opens Pune fulfilment centre",
+        "url": "https://economictimes.indiatimes.com/quietfield-pune",
+        "content": "Quietfield Labs opened a 120,000 sq ft fulfilment centre in Pune this month, its largest site so far.",
+        "score": 0.9,
+        "published_date": "Mon, 02 Nov 2026 08:00:00 GMT"
+      }
+    ]
+  },
+  "llm": {
+    "claims_by_url": {
+      "https://www.zoominfo.com/c/quietfield-labs/123": [
+        {
+          "claim": "Quietfield Labs has an estimated revenue of $10M-$50M",
+          "claim_type": "financial_results",
+          "subject": "company",
+          "key": "revenue",
+          "value": "$10M-$50M",
+          "quote": "Quietfield Labs revenue is estimated at $10M-$50M."
+        }
+      ],
+      "https://smallblog.example/quietfield-labs": [
+        {
+          "claim": "Quietfield Labs is planning a new warehouse in Pune",
+          "claim_type": "expansion",
+          "subject": "company",
+          "key": "site",
+          "value": "Pune",
+          "quote": "I heard Quietfield Labs is planning a new warehouse in Pune soon."
+        }
+      ],
+      "https://economictimes.indiatimes.com/quietfield-pune": [
+        {
+          "claim": "Quietfield Labs opened a 120,000 sq ft fulfilment centre in Pune, its largest site so far",
+          "claim_type": "expansion",
+          "subject": "company",
+          "key": "site",
+          "value": "Pune fulfilment centre",
+          "quote": "Quietfield Labs opened a 120,000 sq ft fulfilment centre in Pune this month, its largest site so far."
+        }
+      ]
+    },
+    "scores": {
+      "Pune": {
+        "r": 9,
+        "s": 9,
+        "u": 8
+      }
+    },
+    "DraftOutput": [
+      {
+        "subject": "Quietfield's new Pune fulfilment centre",
+        "body": "Hi Meera,\n\nSaw that Quietfield Labs opened a 120,000 sq ft fulfilment centre in Pune, its largest site so far. A new site that size usually makes shift planning harder in the first months, especially while volumes settle. ShiftGrid plans warehouse staffing automatically, so operations leaders can keep overtime under control as a new site ramps up. If staffing the Pune centre is on your list this quarter, would it be useful to compare notes on how other operations teams approach it?\n\nBest,\n[Your name]",
+        "claims_text": [
+          "Quietfield Labs opened a 120,000 sq ft fulfilment centre in Pune"
+        ]
+      }
+    ],
+    "QualityJudgement": [
+      {
+        "factual_statements_supported": true,
+        "unsupported_statements": [],
+        "hook_relevant_to_offer": true,
+        "specific_not_generic": true,
+        "seller_claims_supported": true,
+        "tone_appropriate": true,
+        "addressed_to_prospect_company": true,
+        "notes": []
+      }
+    ]
+  }
+}

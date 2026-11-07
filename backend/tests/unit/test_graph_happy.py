@@ -51,11 +51,11 @@ def test_revision_receives_feedback_then_passes(fakes):
     assert "FIX THESE ISSUES" in draft_prompts[1] and state["draft"]["version"] == 2
 
 
-def test_no_eligible_signal_ends_without_draft(fakes):
+def test_no_eligible_signal_never_drafts(fakes):
     _, _, fx = fakes("happy_path")
-    fx["llm"]["claims_by_url"] = {}  # nothing verifiable
+    fx["llm"]["claims_by_url"] = {}  # nothing verifiable → Edge Case B path (see test_edge_b_insufficient.py)
     visited, state = _run(fx)
-    assert "draft_email" not in visited and state["status"] == "insufficient" and not state.get("draft")
+    assert "draft_email" not in visited and "broaden_research" in visited and not state.get("draft")
 
 
 def test_graph_diagram_renders():

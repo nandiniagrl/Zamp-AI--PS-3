@@ -111,3 +111,12 @@ def test_title_synonyms_match():
     from app.verification.verifier import normalize_value
     assert fuzz.token_set_ratio(normalize_value("person_role", "CEO"),
                                 normalize_value("person_role", "Chief Executive Officer")) >= 70
+
+
+def test_career_history_on_one_page_is_one_person(fakes):
+    _, _, fx = fakes("identity_ambiguous")
+    fx["llm"]["people_by_url"]["https://people.example/rahul-sharma-infosys"] += [
+        {"name": "Rahul Sharma", "title": "Sales Manager", "company": "Wipro"},      # earlier job on same profile
+        {"name": "Rahul Sharma", "title": "Account Executive", "company": "TCS"}]
+    res, _ = resolve_identity(ProspectInput.model_validate(fx["prospect"]))
+    assert sorted(c.company for c in res.candidates) == ["Infosys", "Zeta"]
