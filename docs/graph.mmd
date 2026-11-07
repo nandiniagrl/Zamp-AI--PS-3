@@ -14,6 +14,7 @@ graph TD;
 	rank_signals(rank_signals)
 	broaden_research(broaden_research)
 	insufficient_evidence(insufficient_evidence)
+	sensitive_judgment(sensitive_judgment)
 	draft_email(draft_email)
 	quality_check(quality_check)
 	finalize_draft(finalize_draft)
@@ -32,6 +33,7 @@ graph TD;
 	rank_signals -.-> broaden_research;
 	rank_signals -.-> draft_email;
 	rank_signals -.-> insufficient_evidence;
+	rank_signals -.-> sensitive_judgment;
 	research_company --> verify_evidence;
 	research_hiring --> verify_evidence;
 	research_person --> verify_evidence;
@@ -39,6 +41,8 @@ graph TD;
 	resolve_prospect -.-> research_company;
 	resolve_prospect -.-> research_hiring;
 	resolve_prospect -.-> research_person;
+	sensitive_judgment -.-> __end__;
+	sensitive_judgment -.-> broaden_research;
 	verify_evidence --> rank_signals;
 	finalize_draft --> __end__;
 	classDef default fill:#f2f0ff,line-height:1.2

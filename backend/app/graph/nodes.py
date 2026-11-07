@@ -111,6 +111,14 @@ def rank_signals(state):
     n_eligible = sum(r.eligible_for_hook for r in result.ranked)
     upd = {"ranked": _dump(result.ranked), "top_explanation": result.top_explanation, "usage": result.usage,
            "progress": _progress("rank_signals", f"{n_eligible} eligible of {len(result.ranked)} ranked")}
+    top = result.ranked[0] if result.ranked else None
+    if top and top.is_sensitive:  # Edge Case C
+        alt = next((r for r in result.ranked if r.eligible_for_hook), None)
+        action = (f'Avoided it; using the best non-sensitive signal instead: "{alt.claim[:90]}".' if alt else
+                  "No suitable non-sensitive alternative yet; will broaden, then ask for your judgment.")
+        message = f'Strongest signal concerns {top.sensitive_category}: "{top.claim[:90]}".'
+        if not any(e["case"] == "C" and e["message"] == message for e in state.get("edge_cases", [])):
+            upd["edge_cases"] = _edge("C", message, action)  # record each warning once
     return upd
 
 
@@ -139,6 +147,22 @@ def _context_or_abstain(state, kind: str, payload: dict) -> Command:
     final = "insufficient" if kind == "insufficient_evidence" else "abstained"
     return Command(goto=END, update={"status": final,
                                      "progress": _progress(kind, "Stopped without drafting — no fabricated hook.")})
+
+
+def sensitive_judgment(state) -> Command[Literal["broaden_research", "__end__"]]:
+    """Edge Case C (no alternative): only sensitive signals exist → human judgment; the agent will not use them."""
+    sensitive = [r for r in state.get("ranked", []) if r["is_sensitive"]]
+    cats = sorted({r["sensitive_category"] or "sensitive" for r in sensitive})
+    return _context_or_abstain(state, "sensitive_judgment", {
+        "type": "sensitive",
+        "message": "Only sensitive signals found",
+        "detail": (f"The only usable signals involve sensitive events ({', '.join(cats)}). Outreach that references them "
+                   "could feel opportunistic or manipulative, so the agent will not use them as a hook. "
+                   "Abstain (recommended), or add context to search for a different, appropriate angle."),
+        "signals": sensitive,
+        "options": {"abstain": "stop without a draft (recommended)",
+                    "add_context": "provide a different angle to search for"},
+    })
 
 
 def insufficient_evidence(state) -> Command[Literal["broaden_research", "__end__"]]:

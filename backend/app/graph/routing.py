@@ -17,12 +17,16 @@ def route_after_identity(state) -> str | list[str]:
 
 
 def route_after_rank(state) -> str:
-    """Edge Case B: no usable hook → broaden once (plus once per user-context round) → then ask the user.
-    (Phase 9C adds the sensitive-only branch.)"""
-    if any(r["eligible_for_hook"] for r in state.get("ranked", [])):
+    """Edge Cases B & C. A sensitive signal is never eligible as a hook, so if one ranks top the best
+    non-sensitive alternative is used. No usable hook → broaden once (plus once per user-context round);
+    still nothing → ask the user: 'sensitive_judgment' if only sensitive signals exist, else 'insufficient_evidence'."""
+    ranked = state.get("ranked", [])
+    if any(r["eligible_for_hook"] for r in ranked):
         return "draft_email"
     if state.get("broaden_attempts", 0) < MAX_BROADEN + state.get("context_rounds", 0):
         return "broaden_research"
+    if any(r["is_sensitive"] for r in ranked):
+        return "sensitive_judgment"
     return "insufficient_evidence"
 
 

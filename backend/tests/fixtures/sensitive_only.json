@@ -1,0 +1,81 @@
+{
+  "_note": "MOCK DATA (Edge Case C, no alternative). Only breach/lawsuit coverage exists.",
+  "prospect": {
+    "name": "Priya Menon",
+    "company": "Acme Analytics",
+    "title": "VP Finance",
+    "seller": {
+      "product": "LedgerLens",
+      "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster."
+    }
+  },
+  "search": {
+    "identity": [
+      {
+        "title": "Priya Menon - VP Finance - Acme Analytics",
+        "url": "https://acmeanalytics.com/team/priya-menon",
+        "content": "Priya Menon is VP Finance at Acme Analytics, leading finance operations.",
+        "score": 0.9
+      }
+    ],
+    "person": [],
+    "hiring": [],
+    "company": [
+      {
+        "title": "Acme Analytics confirms data breach",
+        "url": "https://www.reuters.com/acme-breach",
+        "content": "Acme Analytics confirmed a data breach that exposed customer records last week.",
+        "score": 0.9,
+        "published_date": "Mon, 02 Nov 2026 07:00:00 GMT"
+      }
+    ],
+    "broadened": [
+      {
+        "title": "Customers sue Acme Analytics over breach",
+        "url": "https://techcrunch.com/acme-lawsuit",
+        "content": "Customers filed a class action lawsuit against Acme Analytics over the breach.",
+        "score": 0.8
+      }
+    ]
+  },
+  "llm": {
+    "people_by_url": {
+      "https://acmeanalytics.com/team/priya-menon": [
+        {
+          "name": "Priya Menon",
+          "title": "VP Finance",
+          "company": "Acme Analytics"
+        }
+      ]
+    },
+    "claims_by_url": {
+      "https://www.reuters.com/acme-breach": [
+        {
+          "claim": "Acme Analytics confirmed a data breach that exposed customer records",
+          "claim_type": "security_incident",
+          "subject": "company",
+          "key": "incident",
+          "value": "data breach",
+          "quote": "Acme Analytics confirmed a data breach that exposed customer records last week."
+        }
+      ],
+      "https://techcrunch.com/acme-lawsuit": [
+        {
+          "claim": "Customers filed a class action lawsuit against Acme Analytics over the breach",
+          "claim_type": "legal",
+          "subject": "company",
+          "key": "lawsuit",
+          "value": "class action",
+          "quote": "Customers filed a class action lawsuit against Acme Analytics over the breach."
+        }
+      ]
+    },
+    "scores": {
+      "breach": {
+        "r": 9,
+        "s": 9,
+        "u": 6
+      }
+    }
+  }
+}
