@@ -98,3 +98,10 @@ def test_identity_conflicts_never_auto_excluded_and_reviewer_can_resolve():
     evs, c = verifier.apply_conflict_decisions(evs, c, ConflictDecision(resolutions={c[0].id: "ev_2"}))
     assert c[0].status == "user_resolved"
     assert {e.id: e.verification_status for e in evs} == {"ev_1": "rejected", "ev_2": "verified"}
+
+
+def test_dedupe_never_merges_conflicting_values():
+    from app.verification.verifier import dedupe_evidence
+    a = _ev(1, "$40M", "techcrunch.com", "high").model_copy(update={"claim": "Acme raised $40M in a Series B round"})
+    b = _ev(2, "$60M", "reuters.com", "high").model_copy(update={"claim": "Acme raised $60M in a Series B round"})
+    assert len(dedupe_evidence([a, b])) == 2 and len(detect_conflicts([a, b])) == 1

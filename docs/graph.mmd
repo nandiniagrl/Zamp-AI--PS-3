@@ -11,6 +11,8 @@ graph TD;
 	research_company(research_company)
 	research_hiring(research_hiring)
 	verify_evidence(verify_evidence)
+	targeted_verification(targeted_verification)
+	conflict_review(conflict_review)
 	rank_signals(rank_signals)
 	broaden_research(broaden_research)
 	insufficient_evidence(insufficient_evidence)
@@ -21,6 +23,8 @@ graph TD;
 	__end__([<p>__end__</p>]):::last
 	__start__ --> resolve_prospect;
 	broaden_research --> verify_evidence;
+	conflict_review -.-> __end__;
+	conflict_review -.-> rank_signals;
 	draft_email --> quality_check;
 	identity_clarify -.-> __end__;
 	identity_clarify -.-> research_company;
@@ -43,7 +47,10 @@ graph TD;
 	resolve_prospect -.-> research_person;
 	sensitive_judgment -.-> __end__;
 	sensitive_judgment -.-> broaden_research;
-	verify_evidence --> rank_signals;
+	targeted_verification --> verify_evidence;
+	verify_evidence -.-> conflict_review;
+	verify_evidence -.-> rank_signals;
+	verify_evidence -.-> targeted_verification;
 	finalize_draft --> __end__;
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0

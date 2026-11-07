@@ -1,0 +1,197 @@
+{
+  "_note": "MOCK DATA (Edge Case D, business fact). Two credible outlets disagree on the funding amount.",
+  "prospect": {
+    "name": "Priya Menon",
+    "company": "Acme Analytics",
+    "title": "VP Finance",
+    "seller": {
+      "product": "LedgerLens",
+      "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster."
+    }
+  },
+  "search": {
+    "person": [
+      {
+        "title": "Priya Menon on scaling finance at Acme Analytics",
+        "url": "https://www.financepod.example/episodes/priya-menon?utm_source=x",
+        "content": "Priya Menon, VP Finance at Acme Analytics, said the team wants to cut its month-end close from ten days to five.",
+        "score": 0.82
+      },
+      {
+        "title": "Priya Menon on scaling finance at Acme Analytics",
+        "url": "https://financepod.example/episodes/priya-menon/",
+        "content": "Duplicate of the same episode page with a different URL form.",
+        "score": 0.7
+      },
+      {
+        "title": "Chef Priya Menon opens Kochi restaurant",
+        "url": "https://news.example/food/priya-menon-kochi",
+        "content": "Priya Menon, a chef in Kochi, opened a new seafood restaurant this week.",
+        "score": 0.41
+      }
+    ],
+    "company": [
+      {
+        "title": "Acme Analytics raises $40M Series B",
+        "url": "https://techcrunch.com/2026/09/12/acme-analytics-series-b",
+        "content": "Acme Analytics raised $40M in a Series B round to expand into Europe.",
+        "score": 0.91,
+        "published_date": "Fri, 12 Sep 2026 09:00:00 GMT"
+      },
+      {
+        "title": "Acme Analytics closes $60M round",
+        "url": "https://www.reuters.com/acme-60m",
+        "content": "Acme Analytics raised $60M in a Series B round to expand into Europe.",
+        "score": 0.85,
+        "published_date": "Sat, 13 Sep 2026 09:00:00 GMT"
+      }
+    ],
+    "hiring": [
+      {
+        "title": "Senior Revenue Accountant - Acme Analytics",
+        "url": "https://boards.greenhouse.io/acmeanalytics/jobs/123",
+        "content": "Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation.",
+        "score": 0.66
+      }
+    ],
+    "identity": [
+      {
+        "title": "Priya Menon - VP Finance - Acme Analytics",
+        "url": "https://acmeanalytics.com/team/priya-menon",
+        "content": "Priya Menon is VP Finance at Acme Analytics, leading finance operations.",
+        "score": 0.9
+      }
+    ],
+    "targeted": []
+  },
+  "llm": {
+    "claims_by_url": {
+      "https://techcrunch.com/2026/09/12/acme-analytics-series-b": [
+        {
+          "claim": "Acme Analytics raised $40M in a Series B round to expand into Europe",
+          "claim_type": "funding",
+          "subject": "company",
+          "key": "funding_round",
+          "value": "$40M Series B",
+          "quote": "Acme Analytics raised $40M in a Series B round to expand into Europe.",
+          "event_date": "2026-09-12"
+        },
+        {
+          "claim": "Acme Analytics won the 2026 Best Startup award",
+          "claim_type": "other",
+          "subject": "company",
+          "key": "award",
+          "value": "Best Startup 2026",
+          "quote": "Acme Analytics won the Best Startup award in 2026."
+        }
+      ],
+      "https://www.businesswire.com/news/acme-analytics-series-b": [
+        {
+          "claim": "Acme Analytics raised $40 million in Series B funding",
+          "claim_type": "funding",
+          "subject": "company",
+          "key": "funding_round",
+          "value": "$40 million Series B",
+          "quote": "Acme Analytics today announced it raised $40 million in Series B funding"
+        }
+      ],
+      "https://www.acmeanalytics.com/news/stripe-partnership": [
+        {
+          "claim": "Acme Analytics announced a partnership with Stripe",
+          "claim_type": "partnership",
+          "subject": "company",
+          "key": "partner",
+          "value": "Stripe",
+          "quote": "Acme Analytics announced a partnership with Stripe."
+        }
+      ],
+      "https://boards.greenhouse.io/acmeanalytics/jobs/123": [
+        {
+          "claim": "Acme Analytics is hiring a Senior Revenue Accountant for multi-processor reconciliation",
+          "claim_type": "hiring",
+          "subject": "company",
+          "key": "team",
+          "value": "revenue accounting",
+          "quote": "Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation."
+        }
+      ],
+      "https://www.financepod.example/episodes/priya-menon?utm_source=x": [
+        {
+          "claim": "Priya Menon wants to cut Acme's month-end close from ten days to five",
+          "claim_type": "leadership_statement",
+          "subject": "person",
+          "key": "priority",
+          "value": "faster month-end close",
+          "quote": "said the team wants to cut its month-end close from ten days to five"
+        }
+      ],
+      "https://news.example/food/priya-menon-kochi": [
+        {
+          "claim": "Priya Menon opened a seafood restaurant in Kochi",
+          "claim_type": "other",
+          "subject": "person",
+          "key": "venture",
+          "value": "restaurant",
+          "quote": "Priya Menon, a chef in Kochi, opened a new seafood restaurant this week."
+        }
+      ],
+      "https://www.reuters.com/acme-60m": [
+        {
+          "claim": "Acme Analytics raised $60M in a Series B round to expand into Europe",
+          "claim_type": "funding",
+          "subject": "company",
+          "key": "funding_round",
+          "value": "$60M Series B",
+          "quote": "Acme Analytics raised $60M in a Series B round to expand into Europe."
+        }
+      ]
+    },
+    "scores": {
+      "raised $40": {
+        "r": 9,
+        "s": 8,
+        "u": 8
+      },
+      "partnership": {
+        "r": 6,
+        "s": 7,
+        "u": 6
+      },
+      "hiring": {
+        "r": 8,
+        "s": 7,
+        "u": 5
+      }
+    },
+    "DraftOutput": [
+      {
+        "subject": "Acme's revenue accounting hire",
+        "body": "Hi Priya,\n\nNoticed Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation. That usually means reconciliation across processors is becoming a real time sink for the finance team. LedgerLens automates revenue reconciliation across payment processors, so the team can close the books faster without adding more manual matching as volumes grow. If that role is meant to tame month-end, would it be useful to compare notes on how other finance teams approach it?\n\nBest,\n[Your name]",
+        "claims_text": [
+          "Acme Analytics is hiring a Senior Revenue Accountant for multi-processor reconciliation"
+        ]
+      }
+    ],
+    "QualityJudgement": [
+      {
+        "factual_statements_supported": true,
+        "unsupported_statements": [],
+        "hook_relevant_to_offer": true,
+        "specific_not_generic": true,
+        "seller_claims_supported": true,
+        "tone_appropriate": true,
+        "notes": [],
+        "addressed_to_prospect_company": true
+      }
+    ],
+    "people_by_url": {
+      "https://acmeanalytics.com/team/priya-menon": [
+        {
+          "name": "Priya Menon",
+          "title": "VP Finance",
+          "company": "Acme Analytics"
+        }
+      ]
+    }
+  }
+}

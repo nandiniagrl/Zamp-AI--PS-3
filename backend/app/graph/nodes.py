@@ -10,7 +10,7 @@ from langgraph.types import Command, interrupt
 from app.drafting.generator import generate_draft
 from app.graph import routing
 from app.identity import resolver
-from app.models import (ContextDecision, Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
+from app.models import (Conflict, ConflictDecision, ContextDecision, Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
                         ResearchRecord)
 from app.quality.checker import check_draft
 from app.ranking.ranker import rank_signals as rank
@@ -94,15 +94,68 @@ def verify_evidence(state):
     done = set(state.get("processed_record_ids", []))
     records = pipeline.dedupe([ResearchRecord.model_validate(r) for r in state.get("research", [])])
     new = [r for r in records if r.id not in done]
-    result = verifier.verify(p, new, prior=[Evidence.model_validate(e) for e in state.get("evidence", [])])
+    tried_targeted = state.get("targeted_attempts", 0) >= routing.MAX_TARGETED
+    result = verifier.verify(p, new, prior=[Evidence.model_validate(e) for e in state.get("evidence", [])],
+                             prior_conflicts=[Conflict.model_validate(c) for c in state.get("conflicts", [])],
+                             exclude_unresolved=tried_targeted)
     counts = {s: sum(e.verification_status == s for e in result.evidence)
               for s in ("verified", "uncertain", "disputed", "rejected")}
     summary = ", ".join(f"{v} {k}" for k, v in counts.items())
     unresolved = sum(c.status == "unresolved" for c in result.conflicts)
-    return {"evidence": _dump(result.evidence), "conflicts": _dump(result.conflicts),
-            "processed_record_ids": sorted(done | {r.id for r in new}), "usage": result.usage,
-            "research_errors": result.errors,
-            "progress": _progress("verify_evidence", f"{summary}; {unresolved} unresolved conflicts")}
+    upd = {"evidence": _dump(result.evidence), "conflicts": _dump(result.conflicts),
+           "processed_record_ids": sorted(done | {r.id for r in new}), "usage": result.usage,
+           "research_errors": result.errors,
+           "progress": _progress("verify_evidence", f"{summary}; {unresolved} unresolved conflicts")}
+    prior_status = {c["id"]: c["status"] for c in state.get("conflicts", [])}
+    edges = []
+    for c in result.conflicts:  # Edge Case D outcomes, recorded once per change
+        if c.status == prior_status.get(c.id):
+            continue
+        if c.status == "resolved":
+            edges += _edge("D", f"Sources disagreed about {c.key}: {' vs '.join(c.values)}.", f"Resolved by evidence strength: {c.note}")
+        elif c.status == "excluded":
+            edges += _edge("D", f"Sources still disagree about {c.key}: {' vs '.join(c.values)}.",
+                           "Disputed claims were excluded from the email.")
+    if edges:
+        upd["edge_cases"] = edges
+    return upd
+
+
+def targeted_verification(state):
+    """Edge Case D: one round of targeted searches aimed at the disputed facts."""
+    p = _p(state)
+    unresolved = [Conflict.model_validate(c) for c in state["conflicts"] if c["status"] == "unresolved"][:2]
+    specs = [spec for c in unresolved for spec in queries.targeted_queries(p, c)]
+    res = pipeline.run_queries("targeted", specs)
+    topics = "; ".join(f"{c.key}: {' vs '.join(c.values)}" for c in unresolved)
+    return {"research": _dump(res.records), "research_errors": res.errors, "usage": res.usage,
+            "targeted_attempts": state.get("targeted_attempts", 0) + 1,
+            "edge_cases": _edge("D", f"Credible sources disagree ({topics}).",
+                                "Ran targeted verification searches (newest source is not assumed correct)."),
+            "progress": _progress("targeted_verification", f"{len(res.records)} extra sources for {len(unresolved)} conflict(s)")}
+
+
+def conflict_review(state) -> Command[Literal["rank_signals", "__end__"]]:
+    """Edge Case D: identity conflicts (role/employer) that stay unresolved → ask the reviewer."""
+    ev = {e["id"]: e for e in state["evidence"]}
+    open_conflicts = [c for c in state["conflicts"]
+                      if c["status"] == "unresolved" and c["claim_type"] in routing.IDENTITY_CONFLICT_TYPES]
+    answer = interrupt({
+        "type": "conflict",
+        "message": "Credible sources disagree about the prospect's role or employer",
+        "detail": "Choose the correct value for each conflict (pick the evidence you trust) or exclude it.",
+        "conflicts": [{**c, "evidence": [ev[i] for i in c["evidence_ids"] if i in ev]} for c in open_conflicts],
+        "options": {"resolutions": "{conflict_id: evidence_id | 'exclude'}", "abort": "stop this run"},
+    })
+    decision = ConflictDecision.model_validate(answer)
+    if decision.abort:
+        return Command(goto=END, update={"status": "aborted", "progress": _progress("conflict_review", "Run stopped by reviewer.")})
+    evidence, conflicts = verifier.apply_conflict_decisions(
+        [Evidence.model_validate(e) for e in state["evidence"]],
+        [Conflict.model_validate(c) for c in state["conflicts"]], decision)
+    return Command(goto="rank_signals", update={
+        "evidence": _dump(evidence), "conflicts": _dump(conflicts), "status": "researching",
+        "progress": _progress("conflict_review", "; ".join(c.note for c in conflicts if c.status == "user_resolved"))})
 
 
 # ---------------------------------------------------------------- ranking

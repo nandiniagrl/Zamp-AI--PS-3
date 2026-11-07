@@ -67,6 +67,10 @@ def main() -> int:
         print(f"\n⏸  PAUSED ({pending['type']}): {pending.get('message', '')}")
         for c in pending.get("candidates", []):
             print(f"     {c['id']}: {c['name']} — {c.get('title')} at {c.get('company')}  ({c['source_url']})")
+        for cf in pending.get("conflicts", []):
+            print(f"     conflict {cf['id']} ({cf['key']}):")
+            for e in cf["evidence"]:
+                print(f"        {e['id']}: \"{e['value']}\" — {e['source_domain']} ({e.get('publication_date') or 'no date'})")
         if pending.get("options"):
             print(f"     options: {json.dumps(pending['options'])}")
         if not answers:

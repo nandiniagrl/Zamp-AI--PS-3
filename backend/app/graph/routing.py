@@ -4,6 +4,8 @@ from langgraph.graph import END
 MAX_REVISIONS = 2  # automatic quality revisions → at most 3 drafts per round
 MAX_BROADEN = 1  # automatic broadened searches when no usable hook is found
 MAX_CONTEXT_ROUNDS = 1  # extra research rounds driven by user-supplied context
+MAX_TARGETED = 1  # targeted verification searches for conflicting evidence
+IDENTITY_CONFLICT_TYPES = {"person_role", "employer"}
 RESEARCH_NODES = ["research_person", "research_company", "research_hiring"]
 
 
@@ -14,6 +16,17 @@ def route_after_resolve(state) -> str | list[str]:
 
 def route_after_identity(state) -> str | list[str]:
     return END if state.get("status") == "aborted" else RESEARCH_NODES
+
+
+def route_after_verify(state) -> str:
+    """Edge Case D: unresolved conflict → one targeted verification round. Still unresolved:
+    identity facts (role/employer) → ask the user; business facts were already excluded by verify_evidence."""
+    unresolved = [c for c in state.get("conflicts", []) if c["status"] == "unresolved"]
+    if unresolved and state.get("targeted_attempts", 0) < MAX_TARGETED:
+        return "targeted_verification"
+    if any(c["claim_type"] in IDENTITY_CONFLICT_TYPES for c in unresolved):
+        return "conflict_review"
+    return "rank_signals"
 
 
 def route_after_rank(state) -> str:

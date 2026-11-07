@@ -1,0 +1,173 @@
+{
+  "prospect": {
+    "name": "Priya Menon",
+    "company": "Acme Analytics",
+    "title": "VP Finance",
+    "seller": {
+      "product": "LedgerLens",
+      "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster."
+    }
+  },
+  "search": {
+    "identity": [
+      {
+        "title": "Priya Menon - VP Finance - Acme Analytics",
+        "url": "https://acmeanalytics.com/team/priya-menon",
+        "content": "Priya Menon is VP Finance at Acme Analytics, leading finance operations.",
+        "score": 0.9
+      }
+    ],
+    "hiring": [
+      {
+        "title": "Senior Revenue Accountant - Acme Analytics",
+        "url": "https://boards.greenhouse.io/acmeanalytics/jobs/123",
+        "content": "Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation.",
+        "score": 0.66
+      }
+    ],
+    "company": [
+      {
+        "title": "Acme Analytics raises $40M Series B",
+        "url": "https://techcrunch.com/2026/09/12/acme-analytics-series-b",
+        "content": "Acme Analytics raised $40M in a Series B round to expand into Europe.",
+        "score": 0.91,
+        "published_date": "Fri, 12 Sep 2026 09:00:00 GMT"
+      }
+    ],
+    "person": [
+      {
+        "title": "Fortune: Priya Menon on Acme Analytics' finance team",
+        "url": "https://fortune.com/2026/10/acme-finance",
+        "content": "Priya Menon, Head of Finance at Acme Analytics, discussed the company's finance roadmap.",
+        "score": 0.8,
+        "published_date": "Wed, 28 Oct 2026 08:00:00 GMT"
+      },
+      {
+        "title": "Business Insider: Priya Menon on Acme Analytics' finance team",
+        "url": "https://www.businessinsider.com/2026/03/acme",
+        "content": "Priya Menon, VP Finance at Acme Analytics, discussed the company's finance roadmap.",
+        "score": 0.8,
+        "published_date": "Tue, 10 Mar 2026 08:00:00 GMT"
+      }
+    ],
+    "targeted": [
+      {
+        "title": "Leadership - Acme Analytics",
+        "url": "https://www.acmeanalytics.com/leadership",
+        "content": "Priya Menon, VP Finance at Acme Analytics, discussed the company's finance roadmap.",
+        "score": 0.9
+      }
+    ]
+  },
+  "llm": {
+    "people_by_url": {
+      "https://acmeanalytics.com/team/priya-menon": [
+        {
+          "name": "Priya Menon",
+          "title": "VP Finance",
+          "company": "Acme Analytics"
+        }
+      ]
+    },
+    "claims_by_url": {
+      "https://fortune.com/2026/10/acme-finance": [
+        {
+          "claim": "Priya Menon is Head of Finance at Acme Analytics",
+          "claim_type": "person_role",
+          "subject": "person",
+          "key": "role",
+          "value": "Head of Finance",
+          "quote": "Priya Menon, Head of Finance at Acme Analytics, discussed the company's finance roadmap."
+        }
+      ],
+      "https://www.businessinsider.com/2026/03/acme": [
+        {
+          "claim": "Priya Menon is VP Finance at Acme Analytics",
+          "claim_type": "person_role",
+          "subject": "person",
+          "key": "role",
+          "value": "VP Finance",
+          "quote": "Priya Menon, VP Finance at Acme Analytics, discussed the company's finance roadmap."
+        }
+      ],
+      "https://techcrunch.com/2026/09/12/acme-analytics-series-b": [
+        {
+          "claim": "Acme Analytics raised $40M in a Series B round to expand into Europe",
+          "claim_type": "funding",
+          "subject": "company",
+          "key": "funding_round",
+          "value": "$40M Series B",
+          "quote": "Acme Analytics raised $40M in a Series B round to expand into Europe.",
+          "event_date": "2026-09-12"
+        },
+        {
+          "claim": "Acme Analytics won the 2026 Best Startup award",
+          "claim_type": "other",
+          "subject": "company",
+          "key": "award",
+          "value": "Best Startup 2026",
+          "quote": "Acme Analytics won the Best Startup award in 2026."
+        }
+      ],
+      "https://boards.greenhouse.io/acmeanalytics/jobs/123": [
+        {
+          "claim": "Acme Analytics is hiring a Senior Revenue Accountant for multi-processor reconciliation",
+          "claim_type": "hiring",
+          "subject": "company",
+          "key": "team",
+          "value": "revenue accounting",
+          "quote": "Acme Analytics is hiring a Senior Revenue Accountant to own multi-processor reconciliation."
+        }
+      ],
+      "https://www.acmeanalytics.com/leadership": [
+        {
+          "claim": "Priya Menon is VP Finance at Acme Analytics",
+          "claim_type": "person_role",
+          "subject": "person",
+          "key": "role",
+          "value": "VP Finance",
+          "quote": "Priya Menon, VP Finance at Acme Analytics, discussed the company's finance roadmap."
+        }
+      ]
+    },
+    "scores": {
+      "raised $40": {
+        "r": 9,
+        "s": 8,
+        "u": 8
+      },
+      "partnership": {
+        "r": 6,
+        "s": 7,
+        "u": 6
+      },
+      "hiring": {
+        "r": 8,
+        "s": 7,
+        "u": 5
+      }
+    },
+    "DraftOutput": [
+      {
+        "subject": "Acme's Europe expansion",
+        "body": "Hi Priya,\n\nSaw that Acme Analytics raised $40M to expand into Europe. New markets usually mean more payment processors and more reconciliation work at month-end. LedgerLens automates revenue reconciliation across payment processors, so the finance team spends less time matching transactions by hand as volumes grow. If Europe is adding processors to your stack this year, it could be useful to compare notes on how other finance teams are handling it. Would a short conversation be useful?\n\nBest,\n[Your name]",
+        "claims_text": [
+          "Acme Analytics raised $40M to expand into Europe"
+        ]
+      }
+    ],
+    "QualityJudgement": [
+      {
+        "factual_statements_supported": true,
+        "unsupported_statements": [],
+        "hook_relevant_to_offer": true,
+        "specific_not_generic": true,
+        "seller_claims_supported": true,
+        "tone_appropriate": true,
+        "notes": [],
+        "addressed_to_prospect_company": true
+      }
+    ]
+  },
+  "_note": "MOCK DATA (Edge Case D, resolvable). Newer source says Head of Finance; older + official site say VP Finance."
+}

@@ -6,6 +6,7 @@ the source must mention the prospect/company, and the source must be credible (o
 import hashlib
 import re
 from dataclasses import dataclass, field
+from urllib.parse import urlparse
 
 from rapidfuzz import fuzz
 
@@ -113,6 +114,8 @@ def build_evidence(claim: ExtractedClaim, rec: ResearchRecord, p: ProspectInput)
 def _same_claim(a: Evidence, b: Evidence) -> bool:
     if a.claim_type != b.claim_type:
         return False
+    if a.value and b.value and a.key == b.key and not same_value(a.claim_type, a.value, b.value):
+        return False  # similar wording but different values = a CONFLICT, never a duplicate
     if fuzz.token_set_ratio(normalize(a.claim), normalize(b.claim)) >= 85:
         return True
     # differently worded but same structured fact, e.g. "$40M Series B" vs "$40 million Series B"
@@ -203,12 +206,19 @@ def _support(cluster: list[Evidence], company: str) -> tuple[int, int, bool]:
     """(weighted score counted once per domain, distinct domains, has official source)"""
     domains: dict[str, int] = {}
     official = False
-    for e in cluster:
-        is_off = credibility.is_official(e.source_domain, company)
+
+    def count(domain: str, level: str) -> None:
+        nonlocal official
+        is_off = credibility.is_official(domain, company)
         official |= is_off
-        w = 3 if is_off else _CRED_RANK[e.credibility]
-        reg = registrable(e.source_domain)
-        domains[reg] = max(domains.get(reg, 0), w)
+        reg = registrable(domain)
+        domains[reg] = max(domains.get(reg, 0), 3 if is_off else _CRED_RANK[level])
+
+    for e in cluster:
+        count(e.source_domain, e.credibility)
+        for url in e.corroborating_urls:  # merged duplicates still count as independent support
+            dom = (urlparse(url).hostname or "").lower().removeprefix("www.")
+            count(dom, credibility.assess(dom, e.claim_type, company)[0])
     return sum(domains.values()), len(domains), official
 
 
