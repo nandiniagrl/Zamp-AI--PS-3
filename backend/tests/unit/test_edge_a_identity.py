@@ -85,7 +85,8 @@ def test_identity_choice_requires_exactly_one_option():
 def test_unique_match_at_company_is_confirmed_without_pausing(fakes):
     _, _, fx = fakes("happy_path")
     graph, config, visited = _start(fx)
-    assert "identity_clarify" not in visited and not graph.get_state(config).interrupts
+    assert "identity_clarify" not in visited
+    assert graph.get_state(config).interrupts[0].value["type"] == "review"   # only the normal review pause
     assert graph.get_state(config).values["identity"]["status"] == "confirmed"
 
 

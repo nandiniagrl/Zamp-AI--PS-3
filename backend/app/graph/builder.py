@@ -12,7 +12,7 @@ def build_graph(checkpointer=None):
     for name in ["resolve_prospect", "identity_clarify", *RESEARCH_NODES, "verify_evidence",
                  "targeted_verification", "conflict_review", "rank_signals",
                  "broaden_research", "insufficient_evidence", "sensitive_judgment",
-                 "draft_email", "quality_check", "finalize_draft"]:
+                 "draft_email", "quality_check", "human_review"]:
         g.add_node(name, getattr(n, name))
 
     g.add_edge(START, "resolve_prospect")
@@ -27,6 +27,6 @@ def build_graph(checkpointer=None):
     g.add_edge("broaden_research", "verify_evidence")
     # conflict_review, insufficient_evidence and sensitive_judgment route themselves via Command(goto=...)
     g.add_edge("draft_email", "quality_check")
-    g.add_conditional_edges("quality_check", route_after_quality, ["draft_email", "finalize_draft"])  # bounded loop
-    g.add_edge("finalize_draft", END)
+    g.add_conditional_edges("quality_check", route_after_quality, ["draft_email", "human_review"])  # bounded loop
+    # human_review routes itself via Command(goto=END | draft_email | quality_check | human_review)
     return g.compile(checkpointer=checkpointer)

@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 10 — Human-in-the-loop review + checkpointing (waiting for your go-ahead)
+**Current step:** Phase 11 — FastAPI backend (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -18,8 +18,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 9A | Edge case A — ambiguous identity | ✅ done | 2026-11-05 | live: Collison@Stripe confirmed; "Rahul Sharma"@made-up co → ambiguous (3 namesakes), pauses; MOCK pause+resume (candidate / company-only / abort); hallucinated candidate rejected; 103 unit tests |
 | 9B | Edge case B — insufficient signals | ✅ done | 2026-11-05 | live: made-up company → company-only → broaden once → "Insufficient verified research" pause; MOCK: add-context finds verified source → draft; bounded to 1 context round; 110 unit tests |
 | 9C | Edge case C — sensitive news | ✅ done | 2026-11-05 | MOCK: layoff ranks #1 but is skipped → funding hook, explained; breach/lawsuit-only → broaden → "sensitive" pause → abstain; sensitive text never reaches writer; 114 unit tests |
-| 9D | Edge case D — conflicting evidence | ✅ done (pending your review) | 2026-11-05 | MOCK: role conflict → targeted search → resolved by strength (newer source loses); unresolved role → reviewer pause (pick / exclude / abort); funding conflict → excluded, never used; 120 unit tests |
-| 10 | Human-in-the-loop | ⬜ | | |
+| 9D | Edge case D — conflicting evidence | ✅ done | 2026-11-05 | MOCK: role conflict → targeted search → resolved by strength (newer source loses); unresolved role → reviewer pause (pick / exclude / abort); funding conflict → excluded, never used; 120 unit tests |
+| 10 | Human-in-the-loop | ✅ done (pending your review) | 2026-11-05 | every draft pauses at human_review; approve/edit(re-checked)/reject/choose_signal/regenerate(capped 5); SQLite checkpoints: paused run resumed from new processes; no-send test; 131 unit tests |
 | 11 | FastAPI backend | ⬜ | | |
 | 12A–F | Frontend (layout, form, progress, intelligence, draft studio, history) | ⬜ ×6 | | |
 | 13 | Persistence | ⬜ | | |

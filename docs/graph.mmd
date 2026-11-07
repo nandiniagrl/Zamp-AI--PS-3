@@ -19,13 +19,16 @@ graph TD;
 	sensitive_judgment(sensitive_judgment)
 	draft_email(draft_email)
 	quality_check(quality_check)
-	finalize_draft(finalize_draft)
+	human_review(human_review)
 	__end__([<p>__end__</p>]):::last
 	__start__ --> resolve_prospect;
 	broaden_research --> verify_evidence;
 	conflict_review -.-> __end__;
 	conflict_review -.-> rank_signals;
 	draft_email --> quality_check;
+	human_review -.-> __end__;
+	human_review -.-> draft_email;
+	human_review -.-> quality_check;
 	identity_clarify -.-> __end__;
 	identity_clarify -.-> research_company;
 	identity_clarify -.-> research_hiring;
@@ -33,7 +36,7 @@ graph TD;
 	insufficient_evidence -.-> __end__;
 	insufficient_evidence -.-> broaden_research;
 	quality_check -.-> draft_email;
-	quality_check -.-> finalize_draft;
+	quality_check -.-> human_review;
 	rank_signals -.-> broaden_research;
 	rank_signals -.-> draft_email;
 	rank_signals -.-> insufficient_evidence;
@@ -51,7 +54,7 @@ graph TD;
 	verify_evidence -.-> conflict_review;
 	verify_evidence -.-> rank_signals;
 	verify_evidence -.-> targeted_verification;
-	finalize_draft --> __end__;
+	human_review -.-> human_review;
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0
 	classDef last fill:#bfb6fc

@@ -51,7 +51,7 @@ def test_user_context_triggers_one_targeted_round_and_can_lead_to_a_draft(fakes)
     state = graph.get_state(config).values
     assert visited[:2] == ["insufficient_evidence", "broaden_research"]
     assert any("Pune warehouse opening" in q for b, q in search.calls if b == "broadened")
-    assert "draft_email" in visited and state["status"] == "draft_ready"
+    assert "draft_email" in visited and state["status"] == "awaiting_review"
     hook = next(e for e in state["evidence"] if e["id"] == state["draft"]["hook_evidence_id"])
     assert hook["verification_status"] == "verified" and "economictimes" in hook["source_url"]  # verified, not user text
 

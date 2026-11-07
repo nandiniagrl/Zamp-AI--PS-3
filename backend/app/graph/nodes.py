@@ -1,7 +1,6 @@
 """Graph nodes: thin adapters that re-validate state, call one module, and return JSON updates.
 Each node appends a human-readable `progress` entry so every step is inspectable."""
 from datetime import datetime, timezone
-
 from typing import Literal
 
 from langgraph.graph import END
@@ -10,11 +9,12 @@ from langgraph.types import Command, interrupt
 from app.drafting.generator import generate_draft
 from app.graph import routing
 from app.identity import resolver
-from app.models import (Conflict, ConflictDecision, ContextDecision, Draft, Evidence, IdentityChoice, IdentityResolution, ProspectInput, RankedSignal,
-                        ResearchRecord)
+from app.models import (Conflict, ConflictDecision, ContextDecision, Draft, Evidence, IdentityChoice,
+                        IdentityResolution, ProspectInput, RankedSignal, ResearchRecord, ReviewDecision)
 from app.quality.checker import check_draft
 from app.ranking.ranker import rank_signals as rank
 from app.research import pipeline, queries
+from app.utils.text import word_count
 from app.verification import verifier
 
 
@@ -266,12 +266,61 @@ def quality_check(state):
     else:
         upd["quality"]["needs_human"] = True  # surfaced to a human, never silently passed
         msg = f"{len(report.revision_feedback)} issue(s) remain → needs human review"
+    if "pending_feedback" not in upd:
+        upd["status"] = "awaiting_review"
     upd["progress"] = _progress("quality_check", msg)
     return upd
 
 
-def finalize_draft(state):
-    """Phase 8 terminal node. Phase 10 replaces it with the human_review interrupt."""
-    needs = (state.get("quality") or {}).get("needs_human")
-    return {"status": "draft_ready",
-            "progress": _progress("finalize_draft", "Draft ready" + (" — flagged for human attention" if needs else ""))}
+# ---------------------------------------------------------------- human review (Phase 10)
+def human_review(state) -> Command[Literal["draft_email", "quality_check", "human_review", "__end__"]]:
+    """Pauses for the reviewer. The application NEVER sends email: 'approve' only marks the draft ready for the
+    human to send manually from their own email client."""
+    selected = state.get("selected_evidence_id")
+    alternatives = [r for r in state.get("ranked", []) if r["eligible_for_hook"] and r["evidence_id"] != selected]
+    decision = ReviewDecision.model_validate(interrupt({
+        "type": "review",
+        "message": "Review the draft",
+        "draft": state["draft"], "quality": state.get("quality"), "alternatives": alternatives,
+        "options": {"approve": "mark ready to send manually", "edit": "save your own subject/body (re-checked)",
+                    "reject": "discard", "choose_signal": "redraft using another verified signal",
+                    "regenerate": "redraft with instructions/tone"},
+        "note": "This application never sends email. Approving only marks the draft ready for you to send yourself.",
+    }))
+    draft = state["draft"]
+    log = [{"action": decision.action, "draft_version": draft["version"], "ts": _now(),
+            "instructions": decision.instructions, "reason": decision.reason}]
+    fresh_round = {"revision_count": 0, "pending_feedback": [], "status": "drafting"}
+
+    if decision.action == "approve":
+        final = dict(draft)
+        if decision.subject or decision.body:  # approve-with-final-touches
+            body = decision.body or draft["body"]
+            final |= {"subject": decision.subject or draft["subject"], "body": body,
+                      "edited_by_human": True, "word_count": word_count(body)}
+        return Command(goto=END, update={"final_draft": final, "status": "approved", "review_log": log,
+                                         "progress": _progress("human_review", "Approved — ready for you to send manually.")})
+    if decision.action == "reject":
+        return Command(goto=END, update={"status": "rejected", "review_log": log,
+                                         "progress": _progress("human_review", f"Rejected. {decision.reason or ''}".strip())})
+    if decision.action == "edit":
+        body = decision.body or draft["body"]
+        edited = {**draft, "subject": decision.subject or draft["subject"], "body": body,
+                  "edited_by_human": True, "version": draft["version"] + 1, "word_count": word_count(body)}
+        return Command(goto="quality_check", update={"draft": edited, "review_log": log,
+                                                     "progress": _progress("human_review", "Reviewer edited the draft; re-checking.")})
+    if decision.action == "choose_signal":
+        if decision.evidence_id not in {a["evidence_id"] for a in alternatives}:
+            return Command(goto="human_review", update={
+                "review_log": [{**log[0], "error": "That signal is not an eligible alternative."}]})
+        return Command(goto="draft_email", update={
+            **fresh_round, "selected_evidence_id": decision.evidence_id, "instructions": decision.instructions,
+            "review_log": log, "progress": _progress("human_review", "Reviewer chose another signal; redrafting.")})
+    # regenerate
+    if state.get("regenerations", 0) >= routing.MAX_REGENERATIONS:
+        return Command(goto="human_review", update={
+            "review_log": [{**log[0], "error": f"Regeneration limit ({routing.MAX_REGENERATIONS}) reached."}]})
+    return Command(goto="draft_email", update={
+        **fresh_round, "instructions": decision.instructions, "tone": decision.tone or state.get("tone"),
+        "regenerations": state.get("regenerations", 0) + 1, "review_log": log,
+        "progress": _progress("human_review", "Reviewer asked for a regenerated draft.")})

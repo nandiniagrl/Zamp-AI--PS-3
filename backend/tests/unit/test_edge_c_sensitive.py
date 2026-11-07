@@ -28,7 +28,7 @@ def test_sensitive_top_signal_is_skipped_for_best_alternative(fakes):
     edge = [e for e in state["edge_cases"] if e["case"] == "C"]
     assert len(edge) == 1 and "layoffs" in edge[0]["message"] and "non-sensitive" in edge[0]["action"]
     assert "skipped because it is sensitive" in state["top_explanation"]
-    assert "sensitive_judgment" not in visited and state["status"] == "draft_ready"
+    assert "sensitive_judgment" not in visited and state["status"] == "awaiting_review"
     draft_prompt = next(p for c, p in zip(llm.calls, llm.prompts) if c == "DraftOutput")
     assert "lays off" not in draft_prompt.lower()                                   # never even shown to the writer
 

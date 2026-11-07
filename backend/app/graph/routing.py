@@ -2,6 +2,7 @@
 from langgraph.graph import END
 
 MAX_REVISIONS = 2  # automatic quality revisions → at most 3 drafts per round
+MAX_REGENERATIONS = 5  # reviewer-requested regenerations per run
 MAX_BROADEN = 1  # automatic broadened searches when no usable hook is found
 MAX_CONTEXT_ROUNDS = 1  # extra research rounds driven by user-supplied context
 MAX_TARGETED = 1  # targeted verification searches for conflicting evidence
@@ -44,5 +45,5 @@ def route_after_rank(state) -> str:
 
 
 def route_after_quality(state) -> str:
-    # Phase 10 replaces "finalize_draft" with "human_review"
-    return "draft_email" if state.get("pending_feedback") else "finalize_draft"
+    """Bounded auto-revision; every draft then goes to a human. There is no path that sends email."""
+    return "draft_email" if state.get("pending_feedback") else "human_review"

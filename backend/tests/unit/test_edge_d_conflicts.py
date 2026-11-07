@@ -30,7 +30,7 @@ def test_conflict_resolved_by_targeted_verification_and_strength_not_recency(fak
     roles = _role_evidence(state)
     assert roles["VP Finance"]["verification_status"] == "verified"
     assert roles["Head of Finance"]["verification_status"] == "rejected"     # the NEWER source loses on strength
-    assert "conflict_review" not in visited and state["status"] == "draft_ready"
+    assert "conflict_review" not in visited and state["status"] == "awaiting_review"
     d_edges = [e for e in state["edge_cases"] if e["case"] == "D"]
     assert any("targeted" in e["action"] for e in d_edges) and any("Resolved" in e["action"] for e in d_edges)
 
@@ -55,7 +55,7 @@ def test_reviewer_resolution_continues_with_chosen_value(fakes):
     visited = [n for c in graph.stream(Command(resume={"resolutions": {conflict["id"]: vp["id"]}}), config,
                                        stream_mode="updates") for n in c]
     state = graph.get_state(config).values
-    assert visited[:2] == ["conflict_review", "rank_signals"] and state["status"] == "draft_ready"
+    assert visited[:2] == ["conflict_review", "rank_signals"] and state["status"] == "awaiting_review"
     roles = _role_evidence(state)
     assert roles["VP Finance"]["verification_status"] == "verified"
     assert roles["Head of Finance"]["verification_status"] == "rejected"
