@@ -1,0 +1,423 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------------------------------
+   Design tokens. Two directions share one component vocabulary; each scope sets the values.
+   See DESIGN_SYSTEM.md (A: sections 1–8, B: section 9).
+   ------------------------------------------------------------------------------------------ */
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-active: var(--active);
+  --color-line: var(--border);
+  --color-rule: var(--rule);
+  --color-control: var(--control);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-track: var(--accent-track);
+  --color-accent-ink: var(--accent-ink);
+  --color-positive: var(--positive);
+  --color-warning: var(--warning);
+  --color-negative: var(--negative);
+  --color-index-red: var(--index-red);
+  --color-mark: var(--mark);
+  --color-mark-strong: var(--mark-strong);
+  --font-sans: var(--font-ui), system-ui, sans-serif;
+  --font-serif: var(--font-serif-face), Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-card: var(--r-card);
+  --radius-control: var(--r-control);
+  --radius-chip: var(--r-chip);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+:root {
+  /* shared status pairs (≥ 4.5:1 text) */
+  --pill-positive-bg: #dcfae5;
+  --pill-positive-ink: #04250e;
+  --pill-warning-bg: #fffbeb;
+  --pill-warning-ink: #92400e;
+  --pill-warning-border: #fde68a;
+  --pill-negative-bg: #ffedea;
+  --pill-negative-ink: #831c1e;
+  --font-serif-face: var(--font-source-serif);
+  --font-ui: var(--font-public-sans);
+}
+
+/* Direction A — "The card file" */
+.dir-a {
+  --ground: #f3f5f6;
+  --surface: #ffffff;
+  --raised: #eef1f3;
+  --active: #e6eaed;
+  --border: #e1e5e8;
+  --rule: #edf0f2;
+  --control: #c8cfd5;
+  --text: #151a1e;
+  --muted: #59636c;
+  --primary: #151a1e;
+  --primary-hover: #2b343b;
+  --accent: #2a6f9e;
+  --accent-soft: #edf5fa;
+  --accent-track: #d6e6f1;
+  --accent-ink: #183f5c;
+  --index-red: #c8402f;
+  --mark: #edf5fa;
+  --mark-strong: #2a6f9e;
+  --positive: #237a4b;
+  --warning: #92400e;
+  --negative: #b42a2a;
+  --pill-neutral-bg: #eef1f3;
+  --pill-neutral-ink: #374151;
+  --r-card: 8px;
+  --r-control: 6px;
+  --r-chip: 4px;
+  --font-ui: var(--font-public-sans);
+}
+
+/* Direction B — "The checked proof" */
+.dir-b {
+  --ground: #f5f5f3;
+  --surface: #ffffff;
+  --raised: #ececea;
+  --active: #e4e4e1;
+  --border: #e3e3e0;
+  --rule: #eeeeec;
+  --control: #cfcfcb;
+  --text: #111111;
+  --muted: #5e5e5a;
+  --primary: #111111;
+  --primary-hover: #2e2e2c;
+  --accent: #1d5fbf;
+  --accent-soft: #eef3fb;
+  --accent-track: #dbe5f5;
+  --accent-ink: #163e78;
+  --index-red: #111111;
+  --mark: #fff1a8;
+  --mark-strong: #f2d43d;
+  --positive: #247b50;
+  --warning: #92400e;
+  --negative: #b42a2a;
+  --pill-neutral-bg: #ececea;
+  --pill-neutral-ink: #3d3d3a;
+  --r-card: 8px;
+  --r-control: 6px;
+  --r-chip: 4px;
+  --font-ui: var(--font-geist);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+body {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #151a1e;
+  background: #f3f5f6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+body:has(.dir-b) {
+  background: #f5f5f3;
+}
+.dir-a,
+.dir-b {
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font-ui), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--accent-track, #d6e6f1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent, #2a6f9e);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------------------------------
+   Shared component vocabulary
+   ------------------------------------------------------------------------------------------ */
+@layer components {
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: var(--r-control);
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    transition: transform 160ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+  }
+  .btn-secondary {
+    background: var(--surface);
+    border-color: var(--control);
+    color: var(--text);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+  }
+  .btn-danger {
+    background: var(--surface);
+    border-color: var(--control);
+    color: var(--negative);
+  }
+  .btn-sm {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+    .btn-secondary:hover:not(:disabled),
+    .btn-ghost:hover:not(:disabled),
+    .btn-danger:hover:not(:disabled) {
+      background: var(--raised);
+    }
+  }
+
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--text);
+  }
+  .field-hint {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--muted);
+  }
+  .field-error {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--negative);
+  }
+  .input,
+  .textarea,
+  .select {
+    width: 100%;
+    border: 1px solid var(--control);
+    border-radius: var(--r-control);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .input,
+  .select {
+    height: 38px;
+    padding: 0 12px;
+  }
+  .textarea {
+    padding: 9px 12px;
+    line-height: 20px;
+    resize: vertical;
+  }
+  .input::placeholder,
+  .textarea::placeholder {
+    color: #6b7177;
+  }
+  .input:focus-visible,
+  .textarea:focus-visible,
+  .select:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-track);
+  }
+  .input[aria-invalid="true"],
+  .textarea[aria-invalid="true"] {
+    border-color: var(--negative);
+  }
+
+  .pill {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 6px;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: var(--r-chip);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    background: var(--pill-neutral-bg);
+    color: var(--pill-neutral-ink);
+  }
+  .pill-accent {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+  .pill-positive {
+    background: var(--pill-positive-bg);
+    color: var(--pill-positive-ink);
+  }
+  .pill-warning {
+    background: var(--pill-warning-bg);
+    color: var(--pill-warning-ink);
+    box-shadow: inset 0 0 0 1px var(--pill-warning-border);
+  }
+  .pill-negative {
+    background: var(--pill-negative-bg);
+    color: var(--pill-negative-ink);
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-card);
+  }
+
+  .skeleton {
+    display: block;
+    background: var(--raised);
+    border-radius: 4px;
+  }
+
+  .link {
+    color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .link:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* Underline tabs on a full-width rule */
+  .tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    position: relative;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 150ms ease;
+  }
+  .tab[aria-selected="true"] {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .tab[aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: -1px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tab:hover {
+      color: var(--text);
+    }
+  }
+
+  /* The running ring: constant motion, linear */
+  .spin-ring {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    border: 2px solid var(--accent-track);
+    border-top-color: var(--accent);
+    animation: spin 900ms linear infinite;
+  }
+
+  .enter-fade {
+    animation: enter-fade 180ms var(--ease-out) both;
+  }
+
+  .sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin-ring {
+    animation: none;
+    border-color: var(--accent);
+  }
+  .enter-fade {
+    animation: enter-fade-reduced 120ms ease both;
+  }
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
+}
+@keyframes enter-fade-reduced {
+  from {
+    opacity: 0;
+  }
+}

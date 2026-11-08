@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 12A — waiting for you to install Node 24 LTS, then your go-ahead
+**Current step:** Phase 12B–12F (building both design directions, user asked to continue without stopping)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -21,7 +21,12 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 9D | Edge case D — conflicting evidence | ✅ done | 2026-11-05 | MOCK: role conflict → targeted search → resolved by strength (newer source loses); unresolved role → reviewer pause (pick / exclude / abort); funding conflict → excluded, never used; 120 unit tests |
 | 10 | Human-in-the-loop | ✅ done | 2026-11-05 | every draft pauses at human_review; approve/edit(re-checked)/reject/choose_signal/regenerate(capped 5); SQLite checkpoints: paused run resumed from new processes; no-send test; 131 unit tests |
 | 11 | FastAPI backend | ✅ done | 2026-11-05 | live: uvicorn + curl — POST /runs returns instantly, polled progress, paused awaiting_review in 27s, approve → approved; /docs 200; log has no secrets; 140 unit tests |
-| 12A–F | Frontend (layout, form, progress, intelligence, draft studio, history) | ⬜ ×6 | | |
+| 12A | Next.js foundation, tokens, shells A+B, proxy, health | ✅ done | 2026-11-05 | Next 16.4.5 / React 19.3 / Tailwind 4; tsc + eslint clean; prod build OK; proxy blocks unknown paths; Taste inspect 0 FAIL at 1440/1024 (both) |
+| 12B | New Prospect form (A+B) | ⬜ | | |
+| 12C | Live research progress + pause panels (A+B) | ⬜ | | |
+| 12D | Prospect Intelligence (A+B) | ⬜ | | |
+| 12E | Draft Studio + review (A+B) | ⬜ | | |
+| 12F | Prospect History (A+B) | ⬜ | | |
 | 13 | Persistence | ⬜ | | |
 | 14 | GCP deployment (free tier) | ⬜ | | |
 | 15 | Evaluation & demo | ⬜ | | |
@@ -34,6 +39,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-05: groq_client.chat_json_patient = one bounded 20s wait on free-tier 429, used by all AI steps.
 - 2026-11-05: Quality = deterministic rules (length fail <65/>120, banned phrases, unsupported figures, evidence ids, CTA, placeholders) + LLM judge with explanatory notes; max 2 auto-revisions then needs-human.
 - 2026-11-05: Identity = 2 Tavily searches (with/without company) + LLM people extraction grounded in snippet; confirmed only if a match is at the entered company; ambiguous → LangGraph interrupt (pick / company-only / abort). Adds ~2 credits + 1 Groq call per run.
+- 2026-11-05: Phase 12 design: two directions built side by side on one shared data layer (`frontend/lib`) and one proxy — A "The card file" at /a, B "The checked proof" at /b; user keeps the better one after 12F. Skills used: frontend-design, design-taste-frontend (app run), impeccable (PRODUCT.md, concept-seed seed:0c355f83cd7f68db), emil-design-eng, web-design-guidelines. Desktop/laptop only (no phone layout, user decision).
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
 
 ## Known issues / limitations

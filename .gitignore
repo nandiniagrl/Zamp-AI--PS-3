@@ -22,3 +22,7 @@ out/
 # os/editor
 .DS_Store
 .idea/
+
+# design-skill working files
+.taste-skill/
+.impeccable/
