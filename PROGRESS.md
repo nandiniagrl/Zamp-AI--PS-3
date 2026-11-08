@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 11 — FastAPI backend (waiting for your go-ahead)
+**Current step:** Phase 12A — Next.js setup + base layout (waiting for your go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -19,8 +19,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 9B | Edge case B — insufficient signals | ✅ done | 2026-11-05 | live: made-up company → company-only → broaden once → "Insufficient verified research" pause; MOCK: add-context finds verified source → draft; bounded to 1 context round; 110 unit tests |
 | 9C | Edge case C — sensitive news | ✅ done | 2026-11-05 | MOCK: layoff ranks #1 but is skipped → funding hook, explained; breach/lawsuit-only → broaden → "sensitive" pause → abstain; sensitive text never reaches writer; 114 unit tests |
 | 9D | Edge case D — conflicting evidence | ✅ done | 2026-11-05 | MOCK: role conflict → targeted search → resolved by strength (newer source loses); unresolved role → reviewer pause (pick / exclude / abort); funding conflict → excluded, never used; 120 unit tests |
-| 10 | Human-in-the-loop | ✅ done (pending your review) | 2026-11-05 | every draft pauses at human_review; approve/edit(re-checked)/reject/choose_signal/regenerate(capped 5); SQLite checkpoints: paused run resumed from new processes; no-send test; 131 unit tests |
-| 11 | FastAPI backend | ⬜ | | |
+| 10 | Human-in-the-loop | ✅ done | 2026-11-05 | every draft pauses at human_review; approve/edit(re-checked)/reject/choose_signal/regenerate(capped 5); SQLite checkpoints: paused run resumed from new processes; no-send test; 131 unit tests |
+| 11 | FastAPI backend | ✅ done (pending your review) | 2026-11-05 | live: uvicorn + curl — POST /runs returns instantly, polled progress, paused awaiting_review in 27s, approve → approved; /docs 200; log has no secrets; 140 unit tests |
 | 12A–F | Frontend (layout, form, progress, intelligence, draft studio, history) | ⬜ ×6 | | |
 | 13 | Persistence | ⬜ | | |
 | 14 | GCP deployment (free tier) | ⬜ | | |
@@ -45,6 +45,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - Phase 9B fixed: credibility now matches full host (economictimes.indiatimes.com was wrongly 'low'); identity resolver treats one profile page as one person (career history was shown as 5 namesakes).
 - Phase 9D fixed: dedup was merging conflicting claims (similar wording, different values) — now never merges different values; conflict strength now counts corroborating sources.
 - Phase 9D not re-run live (to save free Groq tokens); verifier changes covered by unit tests — Phase 15 live eval will re-check.
+- Phase 11 fixed: secret-redacting log filter stringified numeric args (broke %d logs) — now redacts strings only.
+- Phase 11: run history store is in-memory (lost on server restart); checkpoints are already durable (SQLite). Phase 13 makes history durable.
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 is a non-LTS line; switch to Node 24 LTS before Phase 12.
 - Project folder name contains a space — always quote paths.

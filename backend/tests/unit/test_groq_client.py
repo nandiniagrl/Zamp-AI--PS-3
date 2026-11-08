@@ -124,3 +124,9 @@ def test_log_filter_redacts_keys():
     record = logging.LogRecord("x", logging.INFO, "", 0, "key=%s", ("gsk_abcdefghijklmnop",), None)
     RedactSecrets().filter(record)
     assert "gsk_" not in record.getMessage()
+
+
+def test_log_filter_keeps_numeric_args_formattable():
+    record = logging.LogRecord("x", logging.INFO, "", 0, "attempt %d/%d key=%s", (1, 2, "gsk_abcdefghijklmnop"), None)
+    RedactSecrets().filter(record)
+    assert record.getMessage() == "attempt 1/2 key=[REDACTED]"

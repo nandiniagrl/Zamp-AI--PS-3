@@ -12,8 +12,8 @@ def redact(text: str) -> str:
 class RedactSecrets(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         record.msg = redact(str(record.msg))
-        if record.args:
-            record.args = tuple(redact(str(a)) for a in record.args)
+        if isinstance(record.args, tuple):  # only rewrite strings: numbers must stay numbers for %d / %f
+            record.args = tuple(redact(a) if isinstance(a, str) else a for a in record.args)
         return True
 
 
