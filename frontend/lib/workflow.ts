@@ -66,7 +66,8 @@ export function buildStations(run: RunDetail): Station[] {
         id: b.id, label: b.label, doing: b.doing, messages: msgs([b.id]),
         state: (seen(b.id) ? "done" : "upcoming") as StationState,
       }));
-      return { ...d, messages: [], branches, state: branches.every((b) => b.state === "done") ? "done" : branches.some((b) => b.state === "done") ? "current" : "upcoming" };
+      const state: StationState = branches.every((b) => b.state === "done") ? "done" : branches.some((b) => b.state === "done") ? "current" : "upcoming";
+      return { ...d, messages: branches.flatMap((b) => b.messages), branches, state };
     }
     const messages = msgs(d.nodes);
     return { id: d.id, label: d.label, doing: d.doing, optional: d.optional, messages, state: messages.length ? "done" : "upcoming" };
@@ -82,13 +83,17 @@ export function buildStations(run: RunDetail): Station[] {
   }
 
   // The station the agent is on now = the first not-done station after the last done one.
-  if (run.status === "running" || run.is_active) {
+  if ((run.status === "running" || run.is_active) && !visible.some((s) => s.state === "current" || s.state === "waiting")) {
     const lastDone = visible.reduce((acc, s, i) => (s.state === "done" ? i : acc), -1);
     const next = visible.slice(lastDone + 1).find((s) => s.state === "upcoming");
-    if (next) {
-      next.state = "current";
-      next.branches?.forEach((b) => b.state === "upcoming" && (b.state = "current"));
-    }
+    if (next) next.state = "current";
+  }
+  // Research in progress: its unfinished branches are the ones running now.
+  visible.forEach((s) => {
+    if (s.state === "current") s.branches?.forEach((b) => b.state === "upcoming" && (b.state = "current"));
+  });
+  if (!(run.status === "running" || run.is_active)) {
+    visible.forEach((s) => s.state === "current" && s.id === "research" && (s.state = "done"));
   }
 
   if (TERMINAL_FAIL.has(run.status)) {

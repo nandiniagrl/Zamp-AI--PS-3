@@ -16,6 +16,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fixture", default="happy_path")
     ap.add_argument("--port", type=int, default=8001)
+    ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait before each fake API call (to see live progress)")
     args = ap.parse_args()
 
     os.environ["CHECKPOINT_BACKEND"] = "memory"  # nothing from mock runs is persisted
@@ -28,8 +29,18 @@ def main() -> None:
 
     get_settings.cache_clear()
     fx = load_fixture(args.fixture)
-    llm = FakeLLM(fx)
-    tavily_client.search = FakeSearch(fx)
+    llm, search = FakeLLM(fx), FakeSearch(fx)
+    if args.delay:
+        import time
+
+        def slow(fn):
+            def wrapped(*a, **k):
+                time.sleep(args.delay)
+                return fn(*a, **k)
+            return wrapped
+
+        llm, search = slow(llm), slow(search)
+    tavily_client.search = search
     groq_client.chat_json = groq_client.chat_json_patient = llm
 
     from app.api.main import app  # imported after the fakes are installed

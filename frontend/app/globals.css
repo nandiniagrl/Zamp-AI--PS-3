@@ -370,6 +370,8 @@ p {
 
   /* The running ring: constant motion, linear */
   .spin-ring {
+    display: inline-block;
+    flex: none;
     width: 12px;
     height: 12px;
     border-radius: 999px;

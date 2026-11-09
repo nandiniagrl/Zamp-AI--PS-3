@@ -98,3 +98,13 @@ export const QUALITY_CHECK_LABEL: Record<string, string> = {
   addressed_to_prospect_company: "Addressed to the right company",
   llm_judge: "Automated review",
 };
+
+/** Display tidy-up for backend progress text: drops "[status]" tags, shows URLs as domains, fixes plurals. */
+export function cleanMessage(text: string): string {
+  return text
+    .replace(/^\[[a-z_]+\]\s*/i, "")
+    .replace(/https?:\/\/(?:www\.)?([^/\s]+)[^\s)]*/g, "$1")
+    .replace(/\b1 (source|error|conflict|issue|candidate)s\b/g, "1 $1")
+    .replace(/\b(\d+) (professional|conflict|source|issue)\(s\)/g, (_m, n: string, w: string) => `${n} ${w}${n === "1" ? "" : "s"}`)
+    .replace(/\s+\./g, ".");
+}

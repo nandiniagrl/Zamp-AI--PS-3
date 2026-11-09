@@ -23,7 +23,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 11 | FastAPI backend | ✅ done | 2026-11-05 | live: uvicorn + curl — POST /runs returns instantly, polled progress, paused awaiting_review in 27s, approve → approved; /docs 200; log has no secrets; 140 unit tests |
 | 12A | Next.js foundation, tokens, shells A+B, proxy, health | ✅ done | 2026-11-05 | Next 16.4.5 / React 19.3 / Tailwind 4; tsc + eslint clean; prod build OK; proxy blocks unknown paths; Taste inspect 0 FAIL at 1440/1024 (both) |
 | 12B | New Prospect form (A+B) | ✅ done | 2026-11-05 | driven in headless Chrome: empty submit → 5 inline errors + focus first; example fill; submit → POST /runs → redirect to run (both); 422 field mapping; offer remembered locally |
-| 12C | Live research progress + pause panels (A+B) | ⬜ | | |
+| 12C | Live research progress + pause panels (A+B) | ✅ done | 2026-11-05 | mock backend (real graph, fake APIs): live run polled, identity / conflict / insufficient / sensitive pauses rendered + answerable; fixed inline spinner, double "current" station, raw backend wording |
 | 12D | Prospect Intelligence (A+B) | ⬜ | | |
 | 12E | Draft Studio + review (A+B) | ⬜ | | |
 | 12F | Prospect History (A+B) | ⬜ | | |
