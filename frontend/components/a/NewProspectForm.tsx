@@ -38,11 +38,11 @@ export function NewProspectFormA() {
             <span className="absolute left-5 top-0 inline-flex h-[23px] items-center rounded-t-[6px] border border-b-0 border-line bg-surface px-3 text-xs font-medium text-accent-ink">
               New card
             </span>
-            <div className="rounded-[6px] rounded-tl-none border border-line bg-surface px-6 pb-6 pt-5">
+            <div className="rounded-[6px] rounded-tl-none border border-line bg-surface px-6 pb-5 pt-4">
               <h2 id="card-heading" className="text-base font-semibold">
                 The prospect
               </h2>
-              <div aria-hidden="true" className="mb-5 mt-3 h-[2px] rounded-full bg-index-red" />
+              <div aria-hidden="true" className="mb-4 mt-3 h-[2px] rounded-full bg-index-red" />
               <Field name="name" values={f.values} errors={f.errors} set={f.set} disabled={busy} />
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <Field name="company" values={f.values} errors={f.errors} set={f.set} disabled={busy} />

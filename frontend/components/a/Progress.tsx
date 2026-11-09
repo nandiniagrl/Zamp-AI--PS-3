@@ -80,10 +80,8 @@ export function ProgressA({ run, actions, onOpenDraft }: { run: RunDetail; actio
         <NowLine station={now} run={run} />
       </section>
 
-      <div className="grid grid-cols-[minmax(0,1fr)_340px] gap-6 max-[1180px]:grid-cols-1">
-        <ActivityLog progress={progress} errors={run.snapshot.research_errors ?? []} />
-        <EdgeCaseNotes edges={edges} />
-      </div>
+      {edges.length > 0 && <EdgeCaseNotes edges={edges} />}
+      <ActivityLog progress={progress} errors={run.snapshot.research_errors ?? []} />
     </div>
   );
 }

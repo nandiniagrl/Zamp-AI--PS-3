@@ -226,13 +226,13 @@ p {
     color: var(--text);
   }
   .field-hint {
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 18px;
     color: var(--muted);
   }
   .field-error {
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 13px;
+    line-height: 18px;
     color: var(--negative);
   }
   .input,

@@ -84,7 +84,7 @@ function SideGroup({ title, count, emptyText, children }: { title: string; count
   const hasItems = Array.isArray(children) ? children.length > 0 : Boolean(children);
   return (
     <section className="mb-6" aria-label={title}>
-      <h2 className="mb-1.5 flex items-center justify-between px-2.5 text-xs font-medium text-muted">
+      <h2 className="mb-1.5 flex items-center justify-between px-2.5 text-[13px] font-medium text-muted">
         <span>{title}</span>
         {count ? <span className="num rounded bg-accent-soft px-1.5 text-[11px] leading-[18px] text-accent-ink">{count}</span> : null}
       </h2>
@@ -103,8 +103,8 @@ function RunLink({ id, name, sub, active, marked }: { id: string; name: string; 
       >
         <span aria-hidden="true" className={`mt-[7px] size-1.5 flex-none rounded-full ${marked ? "bg-accent" : "bg-control"}`} />
         <span className="min-w-0">
-          <span className="block truncate text-[13px] leading-5 text-ink">{name}</span>
-          <span className="block truncate text-xs leading-4 text-muted">{sub}</span>
+          <span className="block truncate text-sm leading-5 text-ink">{name}</span>
+          <span className="block truncate text-[13px] leading-[18px] text-muted">{sub}</span>
         </span>
       </Link>
     </li>

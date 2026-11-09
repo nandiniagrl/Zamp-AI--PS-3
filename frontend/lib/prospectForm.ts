@@ -185,8 +185,8 @@ export const TONES: { value: Tone; label: string; hint: string }[] = [
 ];
 
 export const FIELD_COPY: Record<FieldKey, { label: string; placeholder: string; hint?: string }> = {
-  name: { label: "Name", placeholder: "Priya Menon…" },
-  company: { label: "Company", placeholder: "Acme Analytics…" },
+  name: { label: "Name", placeholder: "Ananya Rao…" },
+  company: { label: "Company", placeholder: "Freshworks…" },
   title: { label: "Job title", placeholder: "VP Finance…" },
   profile_url: {
     label: "Profile URL",

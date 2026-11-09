@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 12B–12F (building both design directions, user asked to continue without stopping)
+**Current step:** Phase 12 complete in both directions — waiting for the user to pick A or B (then Phase 13)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -26,7 +26,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 12C | Live research progress + pause panels (A+B) | ✅ done | 2026-11-05 | mock backend (real graph, fake APIs): live run polled, identity / conflict / insufficient / sensitive pauses rendered + answerable; fixed inline spinner, double "current" station, raw backend wording |
 | 12D | Prospect Intelligence (A+B) | ✅ done | 2026-11-05 | A ruled prospect card + ranked table + rail; B checked-proof claims keyed to margin notes; verified at 1440/1024 on happy + conflicting-funding fixtures; fixed ragged row, ambiguous tab counts, raw keys, colliding score headers |
 | 12E | Draft Studio + review (A+B) | ✅ done | 2026-11-05 | driven end-to-end vs mock backend: A edit → save/re-check → approve (backend approved, edited_by_human); B rewrite v2 → switch hook v3 → reject w/ confirm (backend rejected); fixed transient "Finished" race (is_active authoritative) |
-| 12F | Prospect History (A+B) | ⬜ | | |
+| 12F | Prospect History (A+B) | ✅ done | 2026-11-05 | views (All \/ Needs you \/ Drafts \/ Approved \/ Rejected \/ No draft) with row-computed counts, URL ?view=, search, empty + no-match + error states; one status mark per row |
 | 13 | Persistence | ⬜ | | |
 | 14 | GCP deployment (free tier) | ⬜ | | |
 | 15 | Evaluation & demo | ⬜ | | |
@@ -53,6 +53,9 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - Phase 9D not re-run live (to save free Groq tokens); verifier changes covered by unit tests — Phase 15 live eval will re-check.
 - Phase 11 fixed: secret-redacting log filter stringified numeric args (broke %d logs) — now redacts strings only.
 - Phase 11: run history store is in-memory (lost on server restart); checkpoints are already durable (SQLite). Phase 13 makes history durable.
+- Phase 12 final gate (Taste inspect --app, prod build, REAL backend data, 1440 + 1024): 0 FAIL on all 10 screens (5 per direction). Remaining WARNs defended: hero-void on a 1-row history, tiny-text from A's 12px table meta, 43px band in A's form card.
+- Phase 12 found on real data: sensitive-but-verified claims were shown like usable facts (B even highlighted them) — fixed: marked "Sensitive: never used" in both.
+- History list and paused-run state live in the backend process memory until Phase 13 (server restart clears the history list).
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 (Homebrew) is a non-LTS line; switch to Homebrew node@24 (24.22.2) before Phase 12.
 - Project folder name contains a space — always quote paths.

@@ -96,7 +96,7 @@ export function IntelligenceA({ run, actions, onOpenDraft }: { run: RunDetail; a
                 const isHook = r.evidence_id === m.hookId;
                 return (
                   <tr key={r.evidence_id} className={`border-t border-rule align-top ${isHook ? "bg-accent-soft/60" : ""}`}>
-                    <td className="num py-3 pl-1 text-muted">{i + 1}</td>
+                    <td className="num py-3 pr-2 text-right text-muted">{i + 1}</td>
                     <td className="py-3 pr-4">
                       <p className="text-ink">{r.claim}</p>
                       <p className="mt-0.5 line-clamp-2 text-xs text-muted">{r.explanation}</p>
@@ -205,8 +205,13 @@ function FactLine({ e, isHook }: { e: Evidence; isHook: boolean }) {
   return (
     <li className="grid grid-cols-[minmax(0,1fr)_220px] gap-x-6 border-b border-accent-track py-2.5">
       <div className="min-w-0">
-        <p className="text-sm text-ink">
+        <p className={`text-sm ${e.is_sensitive ? "text-muted" : "text-ink"}`}>
           {isHook && <span className="pill pill-accent mr-2 align-[1px]">Hook</span>}
+          {e.is_sensitive && (
+            <span className="pill pill-negative mr-2 align-[1px]" title="Verified, but sensitive news is never used in outreach">
+              Sensitive: not used
+            </span>
+          )}
           {e.claim}
         </p>
         <button

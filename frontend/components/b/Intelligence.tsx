@@ -46,7 +46,7 @@ export function IntelligenceB({ run, actions, onOpenDraft }: { run: RunDetail; a
 
       <div className="border-b border-rule px-10 pb-2 pt-7">
         <h2 className="text-base font-semibold">Checked claims</h2>
-        <p className="mt-0.5 text-sm text-muted">Highlighted claims can appear in the email. Each number keys to its source in the margin.</p>
+        <p className="mt-0.5 text-sm text-muted">Highlighted claims can appear in the email; sensitive news never does. Each number keys to its source in the margin.</p>
       </div>
       {m.verified.length === 0 && <p className="px-10 py-5 text-sm text-muted">No claim about this prospect could be verified.</p>}
       <ol>
@@ -111,7 +111,7 @@ export function IntelligenceB({ run, actions, onOpenDraft }: { run: RunDetail; a
             <tbody>
               {m.ranked.map((r, i) => (
                 <tr key={r.evidence_id} className="border-t border-rule align-top">
-                  <td className="num py-3 text-muted">{i + 1}</td>
+                  <td className="num py-3 pr-2 text-right text-muted">{i + 1}</td>
                   <td className="py-3 pr-4">
                     <p className="text-ink">{r.claim}</p>
                     <p className="num mt-0.5 text-xs text-muted">
@@ -190,7 +190,14 @@ function ClaimRow({ e, n, isHook }: { e: Evidence; n: number; isHook: boolean })
     <li className="grid grid-cols-[minmax(0,1fr)_300px] border-b border-rule">
       <p className="px-10 py-3.5 font-serif text-[16px] leading-[26px] text-ink">
         {isHook && <span className="mr-2 rounded-[3px] bg-ink px-1.5 py-0.5 align-[2px] font-sans text-[11px] font-medium text-white">Hook</span>}
-        <mark className="rounded-[2px] bg-mark px-0.5 text-ink [box-decoration-break:clone]">{e.claim}</mark>
+        {e.is_sensitive ? (
+          <span className="text-muted">
+            <span className="pill pill-negative mr-2 align-[2px] font-sans">Sensitive: never used</span>
+            {e.claim}
+          </span>
+        ) : (
+          <mark className={`rounded-[2px] px-0.5 text-ink [box-decoration-break:clone] ${isHook ? "bg-mark" : "bg-[#fff8d6]"}`}>{e.claim}</mark>
+        )}
         <a href={`#${noteId}`} className="ml-1 align-super font-sans text-[11px] font-semibold text-accent" aria-label={`Source note ${n}`}>
           {n}
         </a>

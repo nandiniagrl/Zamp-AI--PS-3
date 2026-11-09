@@ -1,6 +1,6 @@
 # Outreach Copilot — Design System
 
-> **Status: BOTH DIRECTIONS IN BUILD (approved 2026-11-05).** The user chose to build Direction A "The card file" (`/a`) and Direction B "The checked proof" (`/b`) side by side on one shared data layer and one backend, then keep the better one. Sections 1–8 describe A; section 9 describes B. Shared rules (sentence case, motion, accessibility, the Never list) apply to both.
+> **Status: BOTH DIRECTIONS BUILT (Phase 12A–12F, 2026-11-05) — awaiting the user's choice.** The user chose to build Direction A "The card file" (`/a`) and Direction B "The checked proof" (`/b`) side by side on one shared data layer and one backend, then keep the better one. Sections 1–8 describe A; section 9 describes B. Shared rules (sentence case, motion, accessibility, the Never list) apply to both.
 
 Product truth lives in `PRODUCT.md`. This file holds durable visual decisions only.
 

@@ -1,7 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ProofMark, Toaster } from "@/components/shared/ui";
 import { useHealth, useRuns, useUsage } from "@/lib/hooks";
 import { fmtCompact, fmtInt, needsYou, tokensUsed } from "@/lib/format";
@@ -28,12 +29,9 @@ export function ShellB({ children }: { children: React.ReactNode }) {
           </Link>
           <nav aria-label="Main" className="flex items-center gap-1">
             <TopLink href="/b" active={pathname === "/b"}>New prospect</TopLink>
-            <TopLink href="/b/prospects" active={pathname.startsWith("/b/prospects") && !pathname.includes("needs")}>
-              Prospects
-            </TopLink>
-            <TopLink href="/b/prospects?view=needs-you" active={false}>
-              Needs you{waiting ? <span className="num ml-1.5 rounded bg-mark px-1.5 text-[11px] leading-[18px] text-ink">{waiting}</span> : null}
-            </TopLink>
+            <Suspense fallback={<TopLink href="/b/prospects" active={false}>Prospects</TopLink>}>
+              <ProspectLinks pathname={pathname} waiting={waiting} />
+            </Suspense>
           </nav>
           <SystemStatus />
         </div>
@@ -43,6 +41,22 @@ export function ShellB({ children }: { children: React.ReactNode }) {
       </main>
       <Toaster />
     </div>
+  );
+}
+
+/** Reads ?view= so "Needs you" is the active item on the needs-you view (Suspense-wrapped for prerendering). */
+function ProspectLinks({ pathname, waiting }: { pathname: string; waiting: number }) {
+  const needs = useSearchParams().get("view") === "needs-you";
+  const onList = pathname.startsWith("/b/prospects");
+  return (
+    <>
+      <TopLink href="/b/prospects" active={onList && !needs}>
+        Prospects
+      </TopLink>
+      <TopLink href="/b/prospects?view=needs-you" active={onList && needs}>
+        Needs you{waiting ? <span className="num ml-1.5 rounded bg-mark px-1.5 text-[11px] leading-[18px] text-ink">{waiting}</span> : null}
+      </TopLink>
+    </>
   );
 }
 
