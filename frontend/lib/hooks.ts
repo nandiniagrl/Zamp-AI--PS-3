@@ -20,8 +20,11 @@ export function useRun(runId: string) {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const tick = async () => {
       try {
-        const r = await api.getRun(runId);
+        const fetched = await api.getRun(runId);
         if (!alive) return;
+        // While the backend is still executing, its interim status can read "completed" between graph
+        // steps. `is_active` is authoritative: treat the run as working until it settles.
+        const r = fetched.is_active ? { ...fetched, status: "running" as const, pending: null } : fetched;
         setRun(r);
         setError(null);
         setNotFound(false);

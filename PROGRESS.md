@@ -25,7 +25,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 12B | New Prospect form (A+B) | ✅ done | 2026-11-05 | driven in headless Chrome: empty submit → 5 inline errors + focus first; example fill; submit → POST /runs → redirect to run (both); 422 field mapping; offer remembered locally |
 | 12C | Live research progress + pause panels (A+B) | ✅ done | 2026-11-05 | mock backend (real graph, fake APIs): live run polled, identity / conflict / insufficient / sensitive pauses rendered + answerable; fixed inline spinner, double "current" station, raw backend wording |
 | 12D | Prospect Intelligence (A+B) | ✅ done | 2026-11-05 | A ruled prospect card + ranked table + rail; B checked-proof claims keyed to margin notes; verified at 1440/1024 on happy + conflicting-funding fixtures; fixed ragged row, ambiguous tab counts, raw keys, colliding score headers |
-| 12E | Draft Studio + review (A+B) | ⬜ | | |
+| 12E | Draft Studio + review (A+B) | ✅ done | 2026-11-05 | driven end-to-end vs mock backend: A edit → save/re-check → approve (backend approved, edited_by_human); B rewrite v2 → switch hook v3 → reject w/ confirm (backend rejected); fixed transient "Finished" race (is_active authoritative) |
 | 12F | Prospect History (A+B) | ⬜ | | |
 | 13 | Persistence | ⬜ | | |
 | 14 | GCP deployment (free tier) | ⬜ | | |
