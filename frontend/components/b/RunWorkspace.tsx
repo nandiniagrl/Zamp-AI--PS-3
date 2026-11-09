@@ -48,7 +48,6 @@ export function RunWorkspaceB({ runId }: { runId: string }) {
 
   const p = run.prospect;
   const identity = run.snapshot.identity;
-  const evidenceCount = (run.snapshot.evidence ?? []).length;
 
   return (
     <article className="rounded-[10px] border border-line bg-surface">
@@ -84,7 +83,7 @@ export function RunWorkspaceB({ runId }: { runId: string }) {
           {(Object.keys(TAB_LABEL) as RunTab[]).map((t) => (
             <button key={t} id={`tab-${t}`} role="tab" type="button" aria-selected={tab === t} aria-controls={`panel-${t}`} className="tab" onClick={() => setTab(t)}>
               {TAB_LABEL[t]}
-              {t === "intelligence" && evidenceCount ? <span className="num text-xs text-muted">{evidenceCount}</span> : null}
+              
             </button>
           ))}
         </div>

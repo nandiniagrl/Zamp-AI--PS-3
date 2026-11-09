@@ -33,7 +33,6 @@ export function RunWorkspaceA({ runId }: { runId: string }) {
 
   const p = run.prospect;
   const identity = run.snapshot.identity;
-  const ranked = run.snapshot.ranked ?? [];
 
   return (
     <div>
@@ -73,11 +72,10 @@ export function RunWorkspaceA({ runId }: { runId: string }) {
 
       <div role="tablist" aria-label="Run views" className="tabs mt-6">
         {(Object.keys(TAB_LABEL) as RunTab[]).map((t) => {
-          const count = t === "intelligence" && ranked.length ? ranked.length : null;
           return (
             <button key={t} id={`tab-${t}`} role="tab" type="button" aria-selected={tab === t} aria-controls={`panel-${t}`} className="tab" onClick={() => setTab(t)}>
               {TAB_LABEL[t]}
-              {count ? <span className="num text-xs text-muted">{count}</span> : null}
+              
             </button>
           );
         })}

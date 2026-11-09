@@ -65,11 +65,11 @@ export const needsYou = (s: string) => Boolean(RUN_STATUS[s as RunStatus]?.needs
 export const CREDIBILITY_LABEL = { high: "High credibility", medium: "Medium credibility", low: "Low credibility" } as const;
 
 export const DIMENSIONS = [
-  { key: "business_relevance", label: "Relevance", weight: 0.3 },
-  { key: "specificity", label: "Specificity", weight: 0.25 },
-  { key: "credibility", label: "Credibility", weight: 0.2 },
-  { key: "recency", label: "Recency", weight: 0.15 },
-  { key: "outreach_usefulness", label: "Usefulness", weight: 0.1 },
+  { key: "business_relevance", label: "Relevance", short: "Rel", weight: 0.3 },
+  { key: "specificity", label: "Specificity", short: "Spec", weight: 0.25 },
+  { key: "credibility", label: "Credibility", short: "Cred", weight: 0.2 },
+  { key: "recency", label: "Recency", short: "Rec", weight: 0.15 },
+  { key: "outreach_usefulness", label: "Usefulness", short: "Use", weight: 0.1 },
 ] as const;
 
 export const SCORE_NOTE = "Heuristic rubric scores (0–100), not probabilities.";
@@ -107,4 +107,16 @@ export function cleanMessage(text: string): string {
     .replace(/\b1 (source|error|conflict|issue|candidate)s\b/g, "1 $1")
     .replace(/\b(\d+) (professional|conflict|source|issue)\(s\)/g, (_m, n: string, w: string) => `${n} ${w}${n === "1" ? "" : "s"}`)
     .replace(/\s+\./g, ".");
+}
+
+/** The ranking rationale without the backend's trailing rubric disclaimer (shown once, next to the scores). */
+export function angleText(text: string | null | undefined): string | null {
+  if (!text) return null;
+  return cleanMessage(text.replace(/\s*Scores are a weighted heuristic rubric[^.]*\.?\s*$/i, "").trim());
+}
+
+/** "funding_round" → "Funding round", "role" → "Role". */
+export function keyLabel(key: string): string {
+  const k = key.replace(/[_-]+/g, " ").trim();
+  return k ? k[0].toUpperCase() + k.slice(1) : key;
 }
