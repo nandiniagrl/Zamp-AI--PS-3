@@ -36,6 +36,10 @@ def make_checkpointer(s: Settings, sqlite_path: Path | None = None):
             min_size=1,
             max_size=4,
             open=True,
+            # Neon's free compute suspends when idle and kills open connections. Test each connection
+            # before handing it out (a dead one is replaced, not used) and drop idle ones early.
+            check=ConnectionPool.check_connection,
+            max_idle=120,
             # Required by PostgresSaver; prepare_threshold=0 also keeps it safe behind Neon's pgbouncer pooler.
             kwargs={"autocommit": True, "prepare_threshold": 0, "row_factory": dict_row},
         )

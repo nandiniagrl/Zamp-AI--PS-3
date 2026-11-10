@@ -134,11 +134,14 @@ case "${1:-}" in
   cleanup)
     REPO="${REGION}-docker.pkg.dev/${PROJECT}/cloud-run-source-deploy"
     for img in outreach-api outreach-web; do
-      # keep the newest image of each service, delete the rest
-      gc artifacts docker images list "$REPO/$img" --include-tags --sort-by=~UPDATE_TIME \
-        --format='value(version)' 2>/dev/null | tail -n +2 | while read -r digest; do
-          gc artifacts docker images delete "$REPO/$img@$digest" --delete-tags >/dev/null && echo "  deleted $img@${digest:0:19}"
-        done
+      # Never delete an image a live revision runs on; of the rest, keep nothing older than the live one.
+      live="$(gc run services describe "$img" --region "$REGION" \
+        --format='value(spec.template.spec.containers[0].image)' 2>/dev/null | sed 's/.*@//')"
+      [[ -n "$live" ]] || { echo "  skip $img (not deployed)"; continue; }
+      gc artifacts docker images list "$REPO/$img" --format='value(version)' 2>/dev/null | while read -r digest; do
+        [[ "$digest" == "$live" ]] && { echo "  kept $img@${digest:0:19} (live)"; continue; }
+        gc artifacts docker images delete "$REPO/$img@$digest" --delete-tags >/dev/null && echo "  deleted $img@${digest:0:19}"
+      done
     done
     echo "  ✓ cleanup done"
     ;;

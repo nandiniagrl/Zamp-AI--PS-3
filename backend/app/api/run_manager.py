@@ -78,8 +78,10 @@ class RunManager:
             raise RunNotFound(run_id)
         if rec.status not in {"failed", "stale"}:
             raise RunConflictError(f"Only failed or stale runs can be retried (status: {rec.status}).")
+        # No checkpoint yet (it failed before the first step saved) → start again from the saved input.
+        has_checkpoint = bool(self.graph.get_state(self._config(run_id)).values)
         self.store.update(run_id, status="running", error=None)
-        self._submit(run_id, None)
+        self._submit(run_id, None if has_checkpoint else initial_state(run_id, rec.prospect))
 
     # ------------------------------------------------------------------ execution
     def _submit(self, run_id: str, payload) -> None:

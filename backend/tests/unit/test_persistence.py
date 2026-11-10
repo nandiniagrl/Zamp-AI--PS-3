@@ -78,6 +78,18 @@ def test_run_interrupted_mid_flight_becomes_stale_and_retry_resumes(fakes, tmp_p
     assert second.detail(run_id)["status"] == "awaiting_review"
 
 
+def test_retry_of_run_that_failed_before_first_checkpoint_starts_over(fakes, tmp_path):
+    """Seen on Cloud Run: the DB connection died before step 1 saved anything → Retry must restart, not crash."""
+    _, _, fx = fakes("happy_path")
+    m = _manager(tmp_path)
+    m.store.create(RunRecord(run_id="early", prospect_name="P", company="C", title="T",
+                             prospect=ProspectInput.model_validate(fx["prospect"]).model_dump(mode="json"),
+                             status="failed", error="AdminShutdown"))
+    m.retry("early")
+    d = m.detail("early")
+    assert d["status"] == "awaiting_review" and d["error"] is None
+
+
 @pytest.mark.integration
 def test_postgres_checkpoints_survive_restart(fakes):
     """Real Neon Postgres (free tier). Uses MOCK research; cleans up its own thread."""
