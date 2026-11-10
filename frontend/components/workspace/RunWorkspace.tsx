@@ -73,7 +73,7 @@ export function RunWorkspace({ runId }: { runId: string }) {
               Started {fmtDateTime(run.created_at)}.
             </p>
           </div>
-          {run.status === "awaiting_review" && tab !== "draft" && (
+          {run.status === "awaiting_review" && tab === "intelligence" && (
             <button type="button" className="btn btn-primary" onClick={() => setTab("draft")}>
               Review draft
             </button>
