@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.*
+!.env.local.example
+tsconfig.tsbuildinfo
+README.md
+AGENTS.md
+.gcloudignore

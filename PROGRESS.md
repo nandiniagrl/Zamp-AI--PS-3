@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 14 — Google Cloud deployment (waiting for go-ahead)
+**Current step:** Phase 14 — deploy files built and verified locally; waiting for you to set up Google Cloud and run `deploy/gcp.sh` step by step
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -28,7 +28,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 12E | Draft Studio + review (A+B) | ✅ done | 2026-11-05 | driven end-to-end vs mock backend: A edit → save/re-check → approve (backend approved, edited_by_human); B rewrite v2 → switch hook v3 → reject w/ confirm (backend rejected); fixed transient "Finished" race (is_active authoritative) |
 | 12F | Prospect History (A+B) | ✅ done | 2026-11-05 | views (All \/ Needs you \/ Drafts \/ Approved \/ Rejected \/ No draft) with row-computed counts, URL ?view=, search, empty + no-match + error states; one status mark per row |
 | 13 | Persistence | ✅ done | 2026-11-11 | SQLite history + checkpoints locally (default), Firestore + Neon Postgres for cloud; restart tests (paused run survives, stale run retries); real Neon Postgres test passed; UI restart test: run kept in History after backend kill/restart and approved |
-| 14 | GCP deployment (free tier) | ⬜ | | |
+| 14 | GCP deployment (free tier) | 🟡 in progress | | Dockerfiles, proxy.ts basic auth, deploy/gcp.sh; local standalone test: 401 without/with wrong password, 200 with it, API reachable only via proxy; API booted in cloud mode against Neon |
 | 15 | Evaluation & demo | ⬜ | | |
 
 ## Decisions log
@@ -44,6 +44,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-10: User chose Direction B. Direction A deleted; B promoted to the main routes (/, /prospects, /runs/[id]); single token set in globals.css; DESIGN_SYSTEM.md rewritten for B; old /a, /b URLs get a not-found page. Verified in `npm run dev` and production build.
 - 2026-11-05: Phase 12 design: two directions built side by side on one shared data layer (`frontend/lib`) and one proxy — A "The card file" at /a, B "The checked proof" at /b; user keeps the better one after 12F. Skills used: frontend-design, design-taste-frontend (app run), impeccable (PRODUCT.md, concept-seed seed:0c355f83cd7f68db), emil-design-eng, web-design-guidelines. Desktop/laptop only (no phone layout, user decision).
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
+
+- 2026-11-11: Phase 14 — Cloud Run source deploys (no local Docker needed; Cloud Build builds the Dockerfiles). API private (`--no-allow-unauthenticated`, `--no-cpu-throttling` so background runs keep CPU, max 1 instance, 512Mi); web public behind HTTP Basic auth (`proxy.ts`, timing-safe compare) and calls the API with a Google ID token. Secrets go from backend/.env straight into Secret Manager via stdin. Free-tier sizing; verify current quotas on cloud.google.com/run/pricing.
 
 ## Known issues / limitations
 - Phase 3 live run surfaced low-value sources (instagram, tavily.com directory, job aggregators); Phase 4 credibility rules mark them low.
