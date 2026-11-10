@@ -8,6 +8,7 @@ Never present these results as real research.
 """
 import argparse
 import os
+from pathlib import Path
 
 import uvicorn
 
@@ -17,10 +18,14 @@ def main() -> None:
     ap.add_argument("--fixture", default="happy_path")
     ap.add_argument("--port", type=int, default=8001)
     ap.add_argument("--delay", type=float, default=0.0, help="seconds to wait before each fake API call (to see live progress)")
+    ap.add_argument("--persist", action="store_true", help="keep MOCK history + checkpoints in backend/.data/mock (SQLite)")
     args = ap.parse_args()
 
-    os.environ["CHECKPOINT_BACKEND"] = "memory"  # nothing from mock runs is persisted
-    os.environ["STORAGE_BACKEND"] = "memory"
+    if args.persist:  # separate folder so MOCK runs never mix with real history
+        os.environ["CHECKPOINT_BACKEND"] = os.environ["STORAGE_BACKEND"] = "sqlite"
+        os.environ["DATA_DIR"] = str(Path(__file__).resolve().parents[1] / ".data" / "mock")
+    else:
+        os.environ["CHECKPOINT_BACKEND"] = os.environ["STORAGE_BACKEND"] = "memory"  # nothing persisted
 
     from app.config import get_settings
     from app.llm import groq_client

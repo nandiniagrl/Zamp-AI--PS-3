@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 12 complete — Direction B "The checked proof" kept (2026-11-10). Next: Phase 13 persistence (waiting for go-ahead)
+**Current step:** Phase 14 — Google Cloud deployment (waiting for go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -27,7 +27,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 12D | Prospect Intelligence (A+B) | ✅ done | 2026-11-05 | A ruled prospect card + ranked table + rail; B checked-proof claims keyed to margin notes; verified at 1440/1024 on happy + conflicting-funding fixtures; fixed ragged row, ambiguous tab counts, raw keys, colliding score headers |
 | 12E | Draft Studio + review (A+B) | ✅ done | 2026-11-05 | driven end-to-end vs mock backend: A edit → save/re-check → approve (backend approved, edited_by_human); B rewrite v2 → switch hook v3 → reject w/ confirm (backend rejected); fixed transient "Finished" race (is_active authoritative) |
 | 12F | Prospect History (A+B) | ✅ done | 2026-11-05 | views (All \/ Needs you \/ Drafts \/ Approved \/ Rejected \/ No draft) with row-computed counts, URL ?view=, search, empty + no-match + error states; one status mark per row |
-| 13 | Persistence | ⬜ | | |
+| 13 | Persistence | ✅ done | 2026-11-11 | SQLite history + checkpoints locally (default), Firestore + Neon Postgres for cloud; restart tests (paused run survives, stale run retries); real Neon Postgres test passed; UI restart test: run kept in History after backend kill/restart and approved |
 | 14 | GCP deployment (free tier) | ⬜ | | |
 | 15 | Evaluation & demo | ⬜ | | |
 
@@ -39,6 +39,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-05: groq_client.chat_json_patient = one bounded 20s wait on free-tier 429, used by all AI steps.
 - 2026-11-05: Quality = deterministic rules (length fail <65/>120, banned phrases, unsupported figures, evidence ids, CTA, placeholders) + LLM judge with explanatory notes; max 2 auto-revisions then needs-human.
 - 2026-11-05: Identity = 2 Tavily searches (with/without company) + LLM people extraction grounded in snippet; confirmed only if a match is at the entered company; ambiguous → LangGraph interrupt (pick / company-only / abort). Adds ~2 credits + 1 Groq call per run.
+- 2026-11-11: Persistence: STORAGE_BACKEND memory|sqlite|firestore (default sqlite), CHECKPOINT_BACKEND memory|sqlite|postgres (default sqlite; postgres = Neon, pool with autocommit + prepare_threshold=0, setup() on start). Runs still 'running' at startup are marked 'stale' and can be retried from their checkpoint. Mock server gains --persist (backend/.data/mock).
 - 2026-11-10: Dark mode toggle added (top bar). Light mode verified unchanged: computed colours of all 629 elements on 5 screens identical before/after. Dark: all 20 text/background pairs ≥ 4.5:1; persists per browser, no flash on reload; instant switch.
 - 2026-11-10: User chose Direction B. Direction A deleted; B promoted to the main routes (/, /prospects, /runs/[id]); single token set in globals.css; DESIGN_SYSTEM.md rewritten for B; old /a, /b URLs get a not-found page. Verified in `npm run dev` and production build.
 - 2026-11-05: Phase 12 design: two directions built side by side on one shared data layer (`frontend/lib`) and one proxy — A "The card file" at /a, B "The checked proof" at /b; user keeps the better one after 12F. Skills used: frontend-design, design-taste-frontend (app run), impeccable (PRODUCT.md, concept-seed seed:0c355f83cd7f68db), emil-design-eng, web-design-guidelines. Desktop/laptop only (no phone layout, user decision).
@@ -57,7 +58,6 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - Phase 11: run history store is in-memory (lost on server restart); checkpoints are already durable (SQLite). Phase 13 makes history durable.
 - Phase 12 final gate (Taste inspect --app, prod build, REAL backend data, 1440 + 1024): 0 FAIL on all 10 screens (5 per direction). Remaining WARNs defended: hero-void on a 1-row history, tiny-text from A's 12px table meta, 43px band in A's form card.
 - Phase 12 found on real data: sensitive-but-verified claims were shown like usable facts (B even highlighted them) — fixed: marked "Sensitive: never used" in both.
-- History list and paused-run state live in the backend process memory until Phase 13 (server restart clears the history list).
 - Groq free tier: per-minute token cap (429) — mitigated by alternating models per batch + one 20s wait; max 20 sources per verification pass.
 - Node v23.7.0 (Homebrew) is a non-LTS line; switch to Homebrew node@24 (24.22.2) before Phase 12.
 - Project folder name contains a space — always quote paths.

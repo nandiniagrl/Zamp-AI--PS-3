@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     cache_dir: Path = BACKEND_DIR / ".cache"
     cache_ttl_hours: int = 24
     # Persistence (Phase 10+)
-    storage_backend: str = "memory"
+    storage_backend: str = "sqlite"
     checkpoint_backend: str = "sqlite"
     data_dir: Path = BACKEND_DIR / ".data"
     database_url: SecretStr | None = None

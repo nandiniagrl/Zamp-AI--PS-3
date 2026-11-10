@@ -37,7 +37,7 @@ async function proxy(req: NextRequest, ctx: RouteContext<"/api/backend/[...path]
     });
   } catch {
     return Response.json(
-      { detail: "The research service isn't responding. Start the FastAPI server on port 8000, then retry." },
+      { detail: `The research service at ${BACKEND_URL} isn't responding. Start the FastAPI server, then retry.` },
       { status: 502 },
     );
   }
