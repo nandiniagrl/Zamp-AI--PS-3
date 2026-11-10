@@ -61,6 +61,23 @@ Buttons: primary near-black, secondary white with 1px border, ghost text; press 
 
 Feedback and state only; nothing animates on page load. `--ease-out: cubic-bezier(.23,1,.32,1)`; press 160ms, colour 150ms, disclosure fade 180ms; spinner 900ms linear. Transform and opacity only; hover gated to real pointers; `prefers-reduced-motion` removes movement.
 
-## 9. Never
+## 9. Dark mode (added 2026-11-10)
+
+A toggle in the top bar (moon / sun icon, labelled "Switch to dark mode" / "Switch to light mode"). **Light is the default and is unchanged** — light mode sets no theme attribute; dark sets `data-theme="dark"` on `<html>`. The choice is saved per browser and applied by an inline `<head>` script before first paint (no flash); `color-scheme` and `theme-color` follow it. Switching is instant: colour transitions are suppressed for that frame.
+
+Dark follows Taste's dark-screen rules: true neutral darks (no navy or slate), surfaces separated by a lightness step rather than shadows, inverted primary, two greys far enough apart, status inks lifted for contrast. Every text pair was measured at ≥ 4.5:1 (lowest: placeholder 5.31:1).
+
+| Token | Dark | | Token | Dark |
+|---|---|---|---|---|
+| `--ground` | `#0e0e0d` | | `--accent` | `#78a6f0` |
+| `--surface` (sheet) | `#171716` | | `--accent-soft` / `-track` / `-ink` | `#172235` / `#24395a` / `#c4d6f6` |
+| `--raised` / `--active` | `#222220` / `#2a2a28` | | `--mark` (hook) / `--mark-soft` | `#5a4b12` / `#2f2a16` |
+| `--border` / `--rule` / `--control` | `#2b2b29` / `#232321` / `#4a4a47` | | `--positive` / `--warning` / `--negative` | `#5fd08f` / `#e8b04b` / `#f37a7a` |
+| `--text` / `--muted` / `--placeholder` | `#f1f1ee` / `#a9a9a4` / `#8c8c87` | | pills (bg/ink) | neutral `#2a2a28/#dcdcd8`, positive `#13301f/#7fe0a6`, warning `#332709/#f2c35b`, negative `#3b1719/#ffa3a3` |
+| `--primary` / `--primary-ink` | `#f1f1ee` / `#111111` (inverted) | | `--seg-on` / `--on-accent` | `#33332f` / `#0e0e0d` |
+
+Rule for new UI: never hard-code a colour in a component — use a token, so both themes stay correct.
+
+## 10. Never
 
 Gradients, glass, glows, icons in tinted squares, sparklines, emoji, violet/indigo, cream + terracotta, uppercase tracked labels, fake progress percentages, invented data, highlighting anything unverified or sensitive, a send button.

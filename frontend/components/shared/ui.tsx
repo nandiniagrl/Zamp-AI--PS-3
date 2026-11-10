@@ -32,7 +32,7 @@ export function Toaster() {
           key={t.id}
           role="status"
           className="enter-fade pointer-events-auto flex items-start gap-3 rounded-[8px] border border-line bg-surface px-4 py-3 text-sm text-ink"
-          style={{ boxShadow: "0 8px 24px rgba(21,26,30,.12)" }}
+          style={{ boxShadow: "var(--shadow-float)" }}
         >
           <span
             aria-hidden="true"
@@ -58,10 +58,10 @@ export function Toaster() {
 export function ProofMark({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 2.75h9.5L19.25 7.5V21.25H5z" fill="#ffffff" stroke="#111111" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M14.5 2.75V7.5h4.75" fill="none" stroke="#111111" strokeWidth="1.5" strokeLinejoin="round" />
-      <rect x="7.5" y="11" width="9" height="3" rx="0.8" fill="#fff1a8" />
-      <path d="M8.5 17.2l1.8 1.8 3.6-3.8" fill="none" stroke="#1d5fbf" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 2.75h9.5L19.25 7.5V21.25H5z" fill="var(--surface)" stroke="var(--text)" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M14.5 2.75V7.5h4.75" fill="none" stroke="var(--text)" strokeWidth="1.5" strokeLinejoin="round" />
+      <rect x="7.5" y="11" width="9" height="3" rx="0.8" fill="var(--mark-icon)" />
+      <path d="M8.5 17.2l1.8 1.8 3.6-3.8" fill="none" stroke="var(--accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

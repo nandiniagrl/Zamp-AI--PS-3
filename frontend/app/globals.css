@@ -25,6 +25,8 @@
   --color-negative: var(--negative);
   --color-mark: var(--mark);
   --color-mark-soft: var(--mark-soft);
+  --color-on-accent: var(--on-accent);
+  --color-seg-on: var(--seg-on);
   --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-serif: var(--font-source-serif), Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -68,6 +70,61 @@
   --r-card: 8px;
   --r-control: 6px;
   --r-chip: 4px;
+  --primary-ink: #ffffff; /* label on the filled primary button */
+  --on-accent: #ffffff; /* marks drawn on proof blue */
+  --placeholder: #6b7177;
+  --seg-on: #ffffff; /* selected segment in a segmented control */
+  --shadow-float: 0 8px 24px rgba(21, 26, 30, 0.12);
+  --mark-icon: #fff1a8; /* highlight inside the product mark */
+  color-scheme: light;
+}
+
+/* Dark theme — true neutral darks (no navy/slate), surfaces separated by a lightness step,
+   inverted primary, desaturated-but-bright status inks; every text tier ≥ 4.5:1 on its surface. */
+:root[data-theme="dark"] {
+  --ground: #0e0e0d;
+  --surface: #171716;
+  --raised: #222220;
+  --active: #2a2a28;
+  --border: #2b2b29;
+  --rule: #232321;
+  --control: #4a4a47;
+  --text: #f1f1ee;
+  --muted: #a9a9a4;
+  --primary: #f1f1ee;
+  --primary-hover: #d9d9d5;
+  --primary-ink: #111111;
+  --accent: #78a6f0;
+  --accent-soft: #172235;
+  --accent-track: #24395a;
+  --accent-ink: #c4d6f6;
+  --on-accent: #0e0e0d;
+  --mark: #5a4b12;
+  --mark-soft: #2f2a16;
+  --mark-icon: #d9b93a;
+  --positive: #5fd08f;
+  --warning: #e8b04b;
+  --negative: #f37a7a;
+  --pill-neutral-bg: #2a2a28;
+  --pill-neutral-ink: #dcdcd8;
+  --pill-positive-bg: #13301f;
+  --pill-positive-ink: #7fe0a6;
+  --pill-warning-bg: #332709;
+  --pill-warning-ink: #f2c35b;
+  --pill-warning-border: #574315;
+  --pill-negative-bg: #3b1719;
+  --pill-negative-ink: #ffa3a3;
+  --placeholder: #8c8c87;
+  --seg-on: #33332f;
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+/* Theme switches are instant: suppress every colour transition for the frame of the switch. */
+:root[data-theme-switching] *,
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after {
+  transition: none !important;
 }
 
 html {
@@ -136,7 +193,7 @@ p {
   }
   .btn-primary {
     background: var(--primary);
-    color: #ffffff;
+    color: var(--primary-ink);
   }
   .btn-secondary {
     background: var(--surface);
@@ -209,7 +266,7 @@ p {
   }
   .input::placeholder,
   .textarea::placeholder {
-    color: #6b7177;
+    color: var(--placeholder);
   }
   .input:focus-visible,
   .textarea:focus-visible,

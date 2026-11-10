@@ -86,7 +86,7 @@ export function NewProspectForm() {
           <button type="submit" className="btn btn-primary min-w-[168px]" disabled={busy}>
             {busy ? (
               <>
-                <span className="spin-ring [--accent:#fff] [--accent-track:rgba(255,255,255,.35)]" aria-hidden="true" />
+                <span className="spin-ring [--accent:var(--primary-ink)] [--accent-track:color-mix(in_srgb,var(--primary-ink)_35%,transparent)]" aria-hidden="true" />
                 Starting research…
               </>
             ) : (

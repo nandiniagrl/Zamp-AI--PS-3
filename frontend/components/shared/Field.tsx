@@ -82,7 +82,7 @@ export function ToneControl({ value, onChange, disabled, legend = "Writing tone"
           <label
             key={t.value}
             title={t.hint}
-            className="relative cursor-pointer rounded-[6px] px-3 py-1.5 text-sm text-muted transition-colors duration-150 has-[:checked]:bg-surface has-[:checked]:text-ink has-[:checked]:shadow-[0_1px_2px_rgba(0,0,0,.06)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
+            className="relative cursor-pointer rounded-[6px] px-3 py-1.5 text-sm text-muted transition-colors duration-150 has-[:checked]:bg-seg-on has-[:checked]:text-ink has-[:checked]:shadow-[0_1px_2px_rgba(0,0,0,.06)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent"
           >
             <input type="radio" name="tone" value={t.value} checked={value === t.value} onChange={() => onChange(t.value)} className="sr-only" />
             {t.label}

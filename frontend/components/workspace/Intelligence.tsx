@@ -189,7 +189,7 @@ function ClaimRow({ e, n, isHook }: { e: Evidence; n: number; isHook: boolean })
   return (
     <li className="grid grid-cols-[minmax(0,1fr)_300px] border-b border-rule">
       <p className="px-10 py-3.5 font-serif text-[16px] leading-[26px] text-ink">
-        {isHook && <span className="mr-2 rounded-[3px] bg-ink px-1.5 py-0.5 align-[2px] font-sans text-[11px] font-medium text-white">Hook</span>}
+        {isHook && <span className="mr-2 rounded-[3px] bg-ink px-1.5 py-0.5 align-[2px] font-sans text-[11px] font-medium text-surface">Hook</span>}
         {e.is_sensitive ? (
           <span className="text-muted">
             <span className="pill pill-negative mr-2 align-[2px] font-sans">Sensitive: never used</span>

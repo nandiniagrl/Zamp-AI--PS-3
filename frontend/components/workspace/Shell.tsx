@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ProofMark, Toaster } from "@/components/shared/ui";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useHealth, useRuns, useUsage } from "@/lib/hooks";
 import { fmtCompact, fmtInt, needsYou, tokensUsed } from "@/lib/format";
 
@@ -97,6 +98,7 @@ function SystemStatus() {
         />
         <span role="status">{state === "ok" ? "Connected" : state === "down" ? "Research service offline" : "Checking…"}</span>
       </button>
+      <ThemeToggle />
     </div>
   );
 }

@@ -119,7 +119,7 @@ function Mark({ state }: { state: StationState }) {
   if (state === "current") return <span className="spin-ring size-4" aria-hidden="true" />;
   if (state === "done")
     return (
-      <span aria-hidden="true" className="grid size-4 place-items-center rounded-full bg-accent text-white">
+      <span aria-hidden="true" className="grid size-4 place-items-center rounded-full bg-accent text-on-accent">
         <Check size={11} strokeWidth={3} />
       </span>
     );
