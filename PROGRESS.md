@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 15 — evaluation, README, demo script (waiting for go-ahead)
+**Current step:** ✅ All phases complete (0–15). Optional: push to GitHub.
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -29,7 +29,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 | 12F | Prospect History (A+B) | ✅ done | 2026-11-05 | views (All \/ Needs you \/ Drafts \/ Approved \/ Rejected \/ No draft) with row-computed counts, URL ?view=, search, empty + no-match + error states; one status mark per row |
 | 13 | Persistence | ✅ done | 2026-11-11 | SQLite history + checkpoints locally (default), Firestore + Neon Postgres for cloud; restart tests (paused run survives, stale run retries); real Neon Postgres test passed; UI restart test: run kept in History after backend kill/restart and approved |
 | 14 | GCP deployment (free tier) | ✅ done | 2026-11-11 | Live on Cloud Run (asia-south1, project zamp-ai-ps3): API private (403 without token), web behind basic auth (401 without password); API boots with checkpoints=postgres (Neon), storage=firestore; user ran a real Stripe run, left it paused, instance scaled to zero and restarted, then approved it from History; 145 unit tests + Neon integration pass |
-| 15 | Evaluation & demo | ⬜ | | |
+| 15 | Evaluation & demo | ✅ done | 2026-11-11 | Live eval of 4 real prospects: claim audit 3/3 (100%), avg 53.6 s, 5.0 Tavily credits, 18.9k Groq tokens per run, 3/3 drafts passed QC first try, edge cases C and D seen live; all 8 fixtures end-to-end through the API (9 tests); 153 unit tests pass; README with screenshots + docs/demo.md |
 
 ## Decisions log
 - 2026-11-05: Python 3.13.5 + venv/pip; official groq / tavily-python / langgraph SDKs; LangChain not used directly.
@@ -48,6 +48,8 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-11: Phase 14 — Cloud Run source deploys (no local Docker needed; Cloud Build builds the Dockerfiles). API private (`--no-allow-unauthenticated`, `--no-cpu-throttling` so background runs keep CPU, max 1 instance, 512Mi); web public behind HTTP Basic auth (`proxy.ts`, timing-safe compare) and calls the API with a Google ID token. Secrets go from backend/.env straight into Secret Manager via stdin. Free-tier sizing; verify current quotas on cloud.google.com/run/pricing.
 
 - 2026-11-11: Phase 14 fixes found on the cloud: (1) Neon free compute suspends when idle and kills pooled connections → first run failed with AdminShutdown; pool now health-checks connections on checkout (`check=ConnectionPool.check_connection`, `max_idle=120`), verified by killing a live pooled connection on Neon. (2) Retry of a run that failed before its first checkpoint raised EmptyInputError → retry now restarts from the saved input when no checkpoint exists. (3) `gcp.sh cleanup` sorted by update time and deleted the live API image; it now keeps whatever image each service is running.
+
+- 2026-11-11: Phase 15 — `scripts/evaluate.py` audits each draft claim (verified, non-sensitive, quote present in retrieved text). The common-name probe (Amit Kumar, Infosys) did not trigger case A because a real Amit Kumar works there; disputed role claims paused it at conflict review (case D) instead. README screenshots use the labelled fictional fixtures, taken from the production build.
 
 ## Known issues / limitations
 - Phase 3 live run surfaced low-value sources (instagram, tavily.com directory, job aggregators); Phase 4 credibility rules mark them low.

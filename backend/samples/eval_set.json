@@ -1,0 +1,14 @@
+[
+  {"name": "Patrick Collison", "company": "Stripe", "title": "CEO",
+   "seller": {"product": "LedgerLens", "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster.",
+              "target_audience": "Finance and RevOps leaders at high-growth fintechs"}, "tone": "professional"},
+  {"name": "Harshil Mathur", "company": "Razorpay", "title": "CEO",
+   "seller": {"product": "LedgerLens", "value_proposition": "Automates revenue reconciliation across payment processors so finance teams close their books faster.",
+              "target_audience": "Finance leaders at payment companies"}, "tone": "direct"},
+  {"name": "Dennis Woodside", "company": "Freshworks", "title": "CEO",
+   "seller": {"product": "Signalboard", "value_proposition": "Turns support-ticket and product-usage data into a weekly churn-risk list so customer success teams act before renewals slip.",
+              "target_audience": "Customer success and support leaders at SaaS companies"}, "tone": "friendly"},
+  {"name": "Amit Kumar", "company": "Infosys", "title": "Vice President",
+   "seller": {"product": "Signalboard", "value_proposition": "Turns support-ticket and product-usage data into a weekly churn-risk list so customer success teams act before renewals slip."},
+   "tone": "professional"}
+]
