@@ -11,7 +11,7 @@ type Actions = ReturnType<typeof useRunActions>;
 const timeFmt = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
 /** Progress tab — the run as a proofing checklist: steps in the text column, times and notes in the margin. */
-export function ProgressB({ run, actions, onOpenDraft }: { run: RunDetail; actions: Actions; onOpenDraft: () => void }) {
+export function Progress({ run, actions, onOpenDraft }: { run: RunDetail; actions: Actions; onOpenDraft: () => void }) {
   const stations = buildStations(run);
   const now = currentStation(stations);
   const pending = run.pending;

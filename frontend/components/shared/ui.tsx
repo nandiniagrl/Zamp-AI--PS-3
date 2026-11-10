@@ -54,20 +54,7 @@ export function Toaster() {
   );
 }
 
-/** Direction A mark: an index card with its blue tab and red rule. */
-export function CardFileMark({ size = 22 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="9" y="2.5" width="7" height="4" rx="1" fill="#2a6f9e" />
-      <rect x="2.5" y="5.5" width="19" height="15" rx="2.5" fill="#ffffff" stroke="#151a1e" strokeWidth="1.5" />
-      <line x1="5.5" y1="9.5" x2="18.5" y2="9.5" stroke="#c8402f" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="5.5" y1="13" x2="18.5" y2="13" stroke="#2a6f9e" strokeWidth="1" strokeLinecap="round" opacity=".55" />
-      <line x1="5.5" y1="16.3" x2="14.5" y2="16.3" stroke="#2a6f9e" strokeWidth="1" strokeLinecap="round" opacity=".55" />
-    </svg>
-  );
-}
-
-/** Direction B mark: a proof sheet with a folded corner and a checker's tick. */
+/** The product mark: a proof sheet with a folded corner and a checker's tick. */
 export function ProofMark({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">

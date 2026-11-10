@@ -2,7 +2,7 @@
 Principle: BUILD → TEST → VERIFY → APPROVE → NEXT STEP
 Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md`
 
-**Current step:** Phase 12 complete in both directions — waiting for the user to pick A or B (then Phase 13)
+**Current step:** Phase 12 complete — Direction B "The checked proof" kept (2026-11-10). Next: Phase 13 persistence (waiting for go-ahead)
 
 | # | Phase | Status | Verified on | Evidence |
 |---|-------|--------|-------------|----------|
@@ -39,6 +39,7 @@ Full blueprint: `~/.claude/plans/pasted-content-id-9e19-master-purring-goblet.md
 - 2026-11-05: groq_client.chat_json_patient = one bounded 20s wait on free-tier 429, used by all AI steps.
 - 2026-11-05: Quality = deterministic rules (length fail <65/>120, banned phrases, unsupported figures, evidence ids, CTA, placeholders) + LLM judge with explanatory notes; max 2 auto-revisions then needs-human.
 - 2026-11-05: Identity = 2 Tavily searches (with/without company) + LLM people extraction grounded in snippet; confirmed only if a match is at the entered company; ambiguous → LangGraph interrupt (pick / company-only / abort). Adds ~2 credits + 1 Groq call per run.
+- 2026-11-10: User chose Direction B. Direction A deleted; B promoted to the main routes (/, /prospects, /runs/[id]); single token set in globals.css; DESIGN_SYSTEM.md rewritten for B; old /a, /b URLs get a not-found page. Verified in `npm run dev` and production build.
 - 2026-11-05: Phase 12 design: two directions built side by side on one shared data layer (`frontend/lib`) and one proxy — A "The card file" at /a, B "The checked proof" at /b; user keeps the better one after 12F. Skills used: frontend-design, design-taste-frontend (app run), impeccable (PRODUCT.md, concept-seed seed:0c355f83cd7f68db), emil-design-eng, web-design-guidelines. Desktop/laptop only (no phone layout, user decision).
 - 2026-11-05: Default models openai/gpt-oss-120b (drafting/QC) and openai/gpt-oss-20b (extraction) — to be confirmed against live model list in Phase 1.
 

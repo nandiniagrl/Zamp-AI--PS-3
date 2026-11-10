@@ -5,8 +5,8 @@ import { Field, ToneControl } from "@/components/shared/Field";
 import { useProspectForm } from "@/lib/prospectForm";
 
 /** Direction B: the form is a proof sheet. Fields sit in the text column; the margin explains how each is used. */
-export function NewProspectFormB() {
-  const { formRef, ...f } = useProspectForm("/b");
+export function NewProspectForm() {
+  const { formRef, ...f } = useProspectForm();
   const busy = f.submitting;
 
   return (

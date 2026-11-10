@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { RunStatusPill } from "@/components/shared/ui";
-import { ProgressB } from "@/components/b/Progress";
-import { IntelligenceB } from "@/components/b/Intelligence";
-import { DraftStudioB } from "@/components/b/DraftStudio";
+import { Progress } from "@/components/workspace/Progress";
+import { Intelligence } from "@/components/workspace/Intelligence";
+import { DraftStudio } from "@/components/workspace/DraftStudio";
 import { useRun } from "@/lib/hooks";
 import { useRunActions } from "@/lib/runActions";
 import { defaultTab, useRunTab, type RunTab } from "@/lib/useTab";
@@ -12,7 +12,7 @@ import { fmtDateTime } from "@/lib/format";
 
 const TAB_LABEL: Record<RunTab, string> = { progress: "Checklist", intelligence: "Evidence", draft: "Draft proof" };
 
-export function RunWorkspaceB({ runId }: { runId: string }) {
+export function RunWorkspace({ runId }: { runId: string }) {
   const { run, error, notFound, refresh } = useRun(runId);
   const actions = useRunActions(runId, refresh);
   const hasDraft = Boolean(run?.snapshot.draft || run?.snapshot.final_draft);
@@ -23,7 +23,7 @@ export function RunWorkspaceB({ runId }: { runId: string }) {
       <div className="rounded-[10px] border border-line bg-surface px-10 py-9">
         <h1 className="text-2xl font-semibold">Run not found</h1>
         <p className="mt-1 text-muted">This research run doesn&rsquo;t exist on the server. It may have been cleared when the server restarted.</p>
-        <Link href="/b" className="btn btn-primary mt-4">
+        <Link href="/" className="btn btn-primary mt-4">
           Research a new prospect
         </Link>
       </div>
@@ -53,7 +53,7 @@ export function RunWorkspaceB({ runId }: { runId: string }) {
     <article className="rounded-[10px] border border-line bg-surface">
       <header className="px-10 pt-7">
         <nav aria-label="Breadcrumb" className="text-xs text-muted">
-          <Link href="/b/prospects" className="hover:text-ink">
+          <Link href="/prospects" className="hover:text-ink">
             Prospects
           </Link>
           <span aria-hidden="true" className="px-1.5">
@@ -89,9 +89,9 @@ export function RunWorkspaceB({ runId }: { runId: string }) {
         </div>
       </header>
       <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`}>
-        {tab === "progress" && <ProgressB run={run} actions={actions} onOpenDraft={() => setTab("draft")} />}
-        {tab === "intelligence" && <IntelligenceB run={run} actions={actions} onOpenDraft={() => setTab("draft")} />}
-        {tab === "draft" && <DraftStudioB run={run} actions={actions} onOpenProgress={() => setTab("progress")} />}
+        {tab === "progress" && <Progress run={run} actions={actions} onOpenDraft={() => setTab("draft")} />}
+        {tab === "intelligence" && <Intelligence run={run} actions={actions} onOpenDraft={() => setTab("draft")} />}
+        {tab === "draft" && <DraftStudio run={run} actions={actions} onOpenProgress={() => setTab("progress")} />}
       </div>
     </article>
   );

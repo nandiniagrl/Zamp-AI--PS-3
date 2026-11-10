@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------------------------------
-   Design tokens. Two directions share one component vocabulary; each scope sets the values.
-   See DESIGN_SYSTEM.md (A: sections 1–8, B: section 9).
+   Design tokens — "The checked proof" (see DESIGN_SYSTEM.md). Ink-only chrome on galley grey;
+   colour is reserved for the checker's highlight, proof-blue source keys and status.
    ------------------------------------------------------------------------------------------ */
 
 @theme inline {
@@ -23,11 +23,10 @@
   --color-positive: var(--positive);
   --color-warning: var(--warning);
   --color-negative: var(--negative);
-  --color-index-red: var(--index-red);
   --color-mark: var(--mark);
-  --color-mark-strong: var(--mark-strong);
-  --font-sans: var(--font-ui), system-ui, sans-serif;
-  --font-serif: var(--font-serif-face), Georgia, serif;
+  --color-mark-soft: var(--mark-soft);
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --radius-card: var(--r-card);
   --radius-control: var(--r-control);
@@ -37,53 +36,8 @@
 }
 
 :root {
-  /* shared status pairs (≥ 4.5:1 text) */
-  --pill-positive-bg: #dcfae5;
-  --pill-positive-ink: #04250e;
-  --pill-warning-bg: #fffbeb;
-  --pill-warning-ink: #92400e;
-  --pill-warning-border: #fde68a;
-  --pill-negative-bg: #ffedea;
-  --pill-negative-ink: #831c1e;
-  --font-serif-face: var(--font-source-serif);
-  --font-ui: var(--font-public-sans);
-}
-
-/* Direction A — "The card file" */
-.dir-a {
-  --ground: #f3f5f6;
-  --surface: #ffffff;
-  --raised: #eef1f3;
-  --active: #e6eaed;
-  --border: #e1e5e8;
-  --rule: #edf0f2;
-  --control: #c8cfd5;
-  --text: #151a1e;
-  --muted: #59636c;
-  --primary: #151a1e;
-  --primary-hover: #2b343b;
-  --accent: #2a6f9e;
-  --accent-soft: #edf5fa;
-  --accent-track: #d6e6f1;
-  --accent-ink: #183f5c;
-  --index-red: #c8402f;
-  --mark: #edf5fa;
-  --mark-strong: #2a6f9e;
-  --positive: #237a4b;
-  --warning: #92400e;
-  --negative: #b42a2a;
-  --pill-neutral-bg: #eef1f3;
-  --pill-neutral-ink: #374151;
-  --r-card: 8px;
-  --r-control: 6px;
-  --r-chip: 4px;
-  --font-ui: var(--font-public-sans);
-}
-
-/* Direction B — "The checked proof" */
-.dir-b {
-  --ground: #f5f5f3;
-  --surface: #ffffff;
+  --ground: #f5f5f3; /* galley grey */
+  --surface: #ffffff; /* the proof sheet */
   --raised: #ececea;
   --active: #e4e4e1;
   --border: #e3e3e0;
@@ -93,22 +47,27 @@
   --muted: #5e5e5a;
   --primary: #111111;
   --primary-hover: #2e2e2c;
-  --accent: #1d5fbf;
+  --accent: #1d5fbf; /* proof blue: source keys, links, focus */
   --accent-soft: #eef3fb;
   --accent-track: #dbe5f5;
   --accent-ink: #163e78;
-  --index-red: #111111;
-  --mark: #fff1a8;
-  --mark-strong: #f2d43d;
+  --mark: #fff1a8; /* checker's highlight: the hook */
+  --mark-soft: #fff8d6; /* other usable verified claims */
   --positive: #247b50;
   --warning: #92400e;
   --negative: #b42a2a;
   --pill-neutral-bg: #ececea;
   --pill-neutral-ink: #3d3d3a;
+  --pill-positive-bg: #dcfae5;
+  --pill-positive-ink: #04250e;
+  --pill-warning-bg: #fffbeb;
+  --pill-warning-ink: #92400e;
+  --pill-warning-border: #fde68a;
+  --pill-negative-bg: #ffedea;
+  --pill-negative-ink: #831c1e;
   --r-card: 8px;
   --r-control: 6px;
   --r-chip: 4px;
-  --font-ui: var(--font-geist);
 }
 
 html {
@@ -117,30 +76,21 @@ html {
 }
 body {
   margin: 0;
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-family: var(--font-geist), system-ui, sans-serif;
   font-size: 14px;
   line-height: 20px;
-  color: #151a1e;
-  background: #f3f5f6;
+  color: var(--text);
+  background: var(--ground);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
-body:has(.dir-b) {
-  background: #f5f5f3;
-}
-.dir-a,
-.dir-b {
-  background: var(--ground);
-  color: var(--text);
-  font-family: var(--font-ui), system-ui, sans-serif;
-}
 
 ::selection {
-  background: var(--accent-track, #d6e6f1);
+  background: var(--accent-track);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent, #2a6f9e);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

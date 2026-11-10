@@ -11,25 +11,25 @@ import { fmtCompact, fmtInt, needsYou, tokensUsed } from "@/lib/format";
  * Direction B shell — no sidebar: a 52px top bar on the galley ground over a centred working
  * column (max 1180) holding the white proof sheet. Few destinations, so the width goes to the work.
  */
-export function ShellB({ children }: { children: React.ReactNode }) {
+export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { runs } = useRuns();
   const waiting = (runs ?? []).filter((r) => needsYou(r.status)).length;
 
   return (
-    <div className="dir-b min-h-dvh">
+    <div className="min-h-dvh">
       <a href="#main" className="sr-only-focusable btn btn-secondary fixed left-3 top-3 z-50">
         Skip to content
       </a>
       <header className="sticky top-0 z-30 bg-ground/95">
         <div className="mx-auto flex h-[52px] max-w-[1180px] items-center gap-8 px-6">
-          <Link href="/b" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5">
             <ProofMark />
             <span className="text-[15px] font-semibold tracking-[-0.01em]">Outreach Copilot</span>
           </Link>
           <nav aria-label="Main" className="flex items-center gap-1">
-            <TopLink href="/b" active={pathname === "/b"}>New prospect</TopLink>
-            <Suspense fallback={<TopLink href="/b/prospects" active={false}>Prospects</TopLink>}>
+            <TopLink href="/" active={pathname === "/"}>New prospect</TopLink>
+            <Suspense fallback={<TopLink href="/prospects" active={false}>Prospects</TopLink>}>
               <ProspectLinks pathname={pathname} waiting={waiting} />
             </Suspense>
           </nav>
@@ -47,13 +47,13 @@ export function ShellB({ children }: { children: React.ReactNode }) {
 /** Reads ?view= so "Needs you" is the active item on the needs-you view (Suspense-wrapped for prerendering). */
 function ProspectLinks({ pathname, waiting }: { pathname: string; waiting: number }) {
   const needs = useSearchParams().get("view") === "needs-you";
-  const onList = pathname.startsWith("/b/prospects");
+  const onList = pathname.startsWith("/prospects");
   return (
     <>
-      <TopLink href="/b/prospects" active={onList && !needs}>
+      <TopLink href="/prospects" active={onList && !needs}>
         Prospects
       </TopLink>
-      <TopLink href="/b/prospects?view=needs-you" active={onList && needs}>
+      <TopLink href="/prospects?view=needs-you" active={onList && needs}>
         Needs you{waiting ? <span className="num ml-1.5 rounded bg-mark px-1.5 text-[11px] leading-[18px] text-ink">{waiting}</span> : null}
       </TopLink>
     </>

@@ -10,7 +10,7 @@ import type { Evidence, RunDetail } from "@/lib/types";
 type Actions = ReturnType<typeof useRunActions>;
 
 /** Evidence tab — the checked proof: highlighted claims in the text column, keyed source notes in the margin. */
-export function IntelligenceB({ run, actions, onOpenDraft }: { run: RunDetail; actions: Actions; onOpenDraft: () => void }) {
+export function Intelligence({ run, actions, onOpenDraft }: { run: RunDetail; actions: Actions; onOpenDraft: () => void }) {
   const m = buildIntel(run);
   const conflicts = run.snapshot.conflicts ?? [];
   const unverified = [...m.disputed, ...m.uncertain, ...m.rejected];
@@ -196,7 +196,7 @@ function ClaimRow({ e, n, isHook }: { e: Evidence; n: number; isHook: boolean })
             {e.claim}
           </span>
         ) : (
-          <mark className={`rounded-[2px] px-0.5 text-ink [box-decoration-break:clone] ${isHook ? "bg-mark" : "bg-[#fff8d6]"}`}>{e.claim}</mark>
+          <mark className={`rounded-[2px] px-0.5 text-ink [box-decoration-break:clone] ${isHook ? "bg-mark" : "bg-mark-soft"}`}>{e.claim}</mark>
         )}
         <a href={`#${noteId}`} className="ml-1 align-super font-sans text-[11px] font-semibold text-accent" aria-label={`Source note ${n}`}>
           {n}

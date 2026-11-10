@@ -7,7 +7,7 @@ import { useHistory, VIEWS } from "@/lib/history";
 import { fmtDateTime } from "@/lib/format";
 
 /** Direction B history: one proof sheet; filters as a quiet text row; the table carries the work. */
-export function HistoryB() {
+export function History() {
   const h = useHistory();
   return (
     <div className="rounded-[10px] border border-line bg-surface">
@@ -16,7 +16,7 @@ export function HistoryB() {
           <h1 className="text-2xl font-semibold tracking-[-0.015em]">Prospects</h1>
           <p className="mt-1 text-muted">Every prospect researched on this server, with where its draft stands.</p>
         </div>
-        <Link href="/b" className="btn btn-primary">
+        <Link href="/" className="btn btn-primary">
           New prospect
         </Link>
       </div>
@@ -79,7 +79,7 @@ export function HistoryB() {
                 h.rows.map((r) => (
                   <tr key={r.run_id} className="relative border-t border-rule transition-colors duration-150 hover:bg-ground/70">
                     <td className="py-3 pl-10">
-                      <Link href={`/b/runs/${r.run_id}`} className="font-medium text-ink after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-accent">
+                      <Link href={`/runs/${r.run_id}`} className="font-medium text-ink after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-accent">
                         {r.prospect_name}
                       </Link>
                       <span className="block text-[13px] text-muted">{r.title}</span>
@@ -107,7 +107,7 @@ export function HistoryB() {
           {h.runs && h.runs.length === 0 ? (
             <p className="text-sm">
               <span className="font-medium">No prospects yet.</span> <span className="text-muted">Research your first one and it appears here with its draft.</span>{" "}
-              <Link href="/b" className="link">
+              <Link href="/" className="link">
                 Research a prospect
               </Link>
             </p>

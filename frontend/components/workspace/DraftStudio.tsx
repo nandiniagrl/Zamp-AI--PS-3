@@ -12,7 +12,7 @@ import type { Draft, RunDetail } from "@/lib/types";
 
 type Actions = ReturnType<typeof useRunActions>;
 
-export function DraftStudioB({ run, actions, onOpenProgress }: { run: RunDetail; actions: Actions; onOpenProgress: () => void }) {
+export function DraftStudio({ run, actions, onOpenProgress }: { run: RunDetail; actions: Actions; onOpenProgress: () => void }) {
   const draft = currentDraft(run);
   if (!draft) {
     const msg =

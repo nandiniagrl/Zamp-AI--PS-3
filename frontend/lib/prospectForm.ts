@@ -92,7 +92,7 @@ export function toPayload(v: FormValues): ProspectInput {
 }
 
 /** Shared state + submit logic for the New Prospect form; each direction renders its own UI. */
-export function useProspectForm(basePath: "/a" | "/b") {
+export function useProspectForm() {
   const router = useRouter();
   const [values, setValues] = useState<FormValues>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
@@ -162,7 +162,7 @@ export function useProspectForm(basePath: "/a" | "/b") {
           /* ignore */
         }
         toast(`Research started for ${values.name.trim()}`);
-        router.push(`${basePath}/runs/${run_id}`);
+        router.push(`/runs/${run_id}`);
       } catch (err) {
         setSubmitting(false);
         if (err instanceof ApiError && Object.keys(err.fieldErrors).length) {
@@ -172,7 +172,7 @@ export function useProspectForm(basePath: "/a" | "/b") {
         setFormError(err instanceof Error ? err.message : "Couldn't start the research. Try again.");
       }
     },
-    [values, router, basePath],
+    [values, router],
   );
 
   return { values, errors, formError, submitting, rememberedOffer, set, submit, fillExample, clearOffer, formRef };
